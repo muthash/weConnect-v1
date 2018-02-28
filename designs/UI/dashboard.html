@@ -101,23 +101,31 @@
 							    <td> Limpopo Traders & Wholesalers</td>
                                 <td>
                                     <a href="">view</a> |
-                                    <a href="">edit</a>
+                                    <a href="#updateModal" data-toggle="modal" data-target="#updateModal">edit</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td><input type="checkbox" style="margin-left:1px" class="form-check-input"></td>
-							    <td> Limpopo Traders & Wholesalers</td>
+							    <td> Andela Kenya </td>
                                 <td>
                                     <a href="">view</a> |
-                                    <a href="">edit</a>
+                                    <a href="#updateModal" data-toggle="modal" data-target="#updateModal">edit</a>
                                 </td>
                             </tr>
-                             <tr>
+                            <tr>
                                 <td><input type="checkbox" style="margin-left:1px" class="form-check-input"></td>
-							    <td> Limpopo Traders & Wholesalers</td>
+							    <td> Chania Bus Company</td>
+                               <td>
+                                    <a href="">view</a> |
+                                    <a href="#updateModal" data-toggle="modal" data-target="#updateModal">edit</a>
+                                </td>
+                            </tr> 
+                            <tr>
+                                <td><input type="checkbox" style="margin-left:1px" class="form-check-input"></td>
+                                <td> Tujijenge Youth Sacco</td>
                                 <td>
                                     <a href="">view</a> |
-                                    <a href="">edit</a>
+                                    <a href="#updateModal" data-toggle="modal" data-target="#updateModal">edit</a>
                                 </td>
                             </tr>  
 					    </tbody>
@@ -125,7 +133,57 @@
 				    <button type="submit" class="btn btn-primary">Delete</button>
 				</div>
                 </div>
-            </div> 
+            </div>
+            <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModal" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateModal">Update the selected business</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="name">Business name</label>
+						    <input  type="text" class="form-control" id="name" required>
+					    </div>
+                        <div class="form-group">
+                            <label for="description">Business Description</label>
+                            <textarea class="form-control" id="description" rows="2" required></textarea>
+                        </div>
+					    <div class="form-group">
+                            <label for="category">Business Category</label>
+						    <select class="custom-select col-md-6" id="category" required>
+							    <option selected> </option>
+							    <option value="1">Manufacturing</option>
+							    <option value="2">Conctruction</option>
+                                <option value="3">IT</option>
+                                <option value="4">Wholesale & Retail</option>
+                                <option value="5">Hotel</option>
+						    </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Business Location</label>
+						    <select class="custom-select col-md-6" id="location" required>
+							    <option selected> </option>
+							    <option value="1">Nairobi</option>
+							    <option value="2">Mombasa</option>
+                                <option value="3">Kisumu</option>
+                                <option value="4">Eldoret</option>
+                                <option value="5">Nakuru</option>
+						    </select>
+                        </div>
+				    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Update Business</button>
+                </div>
+                </div>
+                </div>
+            </div>
             </div>
             </div>    
         </div>  
