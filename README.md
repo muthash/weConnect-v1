@@ -28,7 +28,7 @@ To start using the WeConnect User Interfaces:
 [WeConnect](https://muthash.github.io/)
 
 ## Images
-![Signin](/designs/UI/images/signin.png?raw=true "Signin Interface")
+![Signin](designs/UI/images/signin.png?raw=true "Signin Interface")
 ![Dashboard](/designs/UI/images/dashboard.png)
 ![Business registry](/designs/UI/images/biz.png)
 ![Business Profile](/designs/UI/images/profile.png)
