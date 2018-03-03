@@ -1,3 +1,5 @@
 myenv
 .vscode
 **/__Pycache__/*
+.coverage
+htmlcov/
