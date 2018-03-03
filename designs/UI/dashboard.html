@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>WeConnect</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/custom.css" type="text/css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #4B413F;" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="images/logo.png" width="50" height="40" class="d-inline-block align-top" alt="WeConnect">
+            </a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="dashboard.html">Dashboard
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="allbiz.html">Businesses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="">Profile</a>
+                    <a class="nav-item nav-link" href="">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container" style="margin-top:80px;">
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <strong>
+                            <h5 style="text-align: center;">Create Your Business</h5>
+                        </strong>
+                        <form>
+                            <div class="form-group">
+                                <label for="name">Business name</label>
+                                <input type="text" class="form-control" id="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Business Description</label>
+                                <textarea class="form-control" id="description" rows="2" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="category">Business Category</label>
+                                <select class="custom-select col-md-6" id="category" required>
+                                    <option selected> </option>
+                                    <option value="1">Manufacturing</option>
+                                    <option value="2">Conctruction</option>
+                                    <option value="3">IT</option>
+                                    <option value="4">Wholesale & Retail</option>
+                                    <option value="5">Hotel</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="location">Business Location</label>
+                                <select class="custom-select col-md-6" id="location" required>
+                                    <option selected> </option>
+                                    <option value="1">Nairobi</option>
+                                    <option value="2">Mombasa</option>
+                                    <option value="3">Kisumu</option>
+                                    <option value="4">Eldoret</option>
+                                    <option value="5">Nakuru</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add business</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <strong>
+                            <h5 style="text-align: center;">My Registered Businesses</h5>
+                        </strong>
+                        <table class="table table-striped">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Business name</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" style="margin-left:1px" class="form-check-input">
+                                    </td>
+                                    <td> Limpopo Traders & Wholesalers</td>
+                                    <td>
+                                        <a href="reviews.html">view</a> |
+                                        <a href="#updateModal" data-toggle="modal" data-target="#updateModal">edit</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" style="margin-left:1px" class="form-check-input">
+                                    </td>
+                                    <td> Andela Kenya </td>
+                                    <td>
+                                        <a href="reviews.html">view</a> |
+                                        <a href="#updateModal" data-toggle="modal" data-target="#updateModal">edit</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" style="margin-left:1px" class="form-check-input">
+                                    </td>
+                                    <td> Chania Bus Company</td>
+                                    <td>
+                                        <a href="reviews.html">view</a> |
+                                        <a href="#updateModal" data-toggle="modal" data-target="#updateModal">edit</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" style="margin-left:1px" class="form-check-input">
+                                    </td>
+                                    <td> Tujijenge Youth Sacco</td>
+                                    <td>
+                                        <a href="reviews.html">view</a> |
+                                        <a href="#updateModal" data-toggle="modal" data-target="#updateModal">edit</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button type="submit" class="btn btn-primary">Delete selected</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModal" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <strong>
+                                <h5 class="modal-title" id="updateModal">Update the selected business</h5>
+                            </strong>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="name">Business name</label>
+                                    <input type="text" class="form-control" id="name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="description">Business Description</label>
+                                    <textarea class="form-control" id="description" rows="2" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="category">Business Category</label>
+                                    <select class="custom-select col-md-6" id="category" required>
+                                        <option selected> </option>
+                                        <option value="1">Manufacturing</option>
+                                        <option value="2">Conctruction</option>
+                                        <option value="3">IT</option>
+                                        <option value="4">Wholesale & Retail</option>
+                                        <option value="5">Hotel</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="location">Business Location</label>
+                                    <select class="custom-select col-md-6" id="location" required>
+                                        <option selected> </option>
+                                        <option value="1">Nairobi</option>
+                                        <option value="2">Mombasa</option>
+                                        <option value="3">Kisumu</option>
+                                        <option value="4">Eldoret</option>
+                                        <option value="5">Nakuru</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Update Business</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="js/jquery-3.2.1.slim.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</body>
+
+</html>

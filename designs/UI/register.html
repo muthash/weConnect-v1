@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>WeConnect</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/custom.css" type="text/css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #4B413F;" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="images/logo.png" width="50" height="40" class="d-inline-block align-top" alt="WeConnect">
+            </a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search WeConnect" aria-label="Search">
+                </form>
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="signin.html">Sign in</a>
+                    <span class="navbar-text">or</span>
+                    <a class="nav-item nav-link active" href="register.html">Sign up
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <section class="masthead text-center text-white d-flex">
+        <div class="container my-auto">
+            <div class="row">
+                <div class="col-lg-12 mx-auto">
+                    <strong>
+                        <p class="text-faded mb-5">Create your personal account</p>
+                    </strong>
+                    <div class="form-register mx-auto">
+                        <form>
+                            <div class="form-group">
+                                <label for="UsernameInput" class="col-form-label col-form-label-sm">Username</label>
+                                <input type="text" class="form-control" id="UsernameInput" placeholder="Pick a username" required>
+
+                                <label for="EmailInput" class="col-form-label col-form-label-sm">Email address</label>
+                                <input type="email" class="form-control" id="EmailInput" placeholder="you@example.com" required>
+                                <small id="PasswordInput" class="form-text text-muted">
+                                    We'll occasionally send updates about your account to this inbox. We'll never share your email address with anyone.
+                                </small>
+
+                                <label for="PasswordInput" class="col-form-label col-form-label-sm">Password</label>
+                                <input type="password" class="form-control" id="PasswordInput" placeholder="Create a password" required>
+                                <small id="PasswordInput" class="form-text text-muted">
+                                    Use at least one lowercase letter, one numeral, and seven characters.
+                                </small>
+
+                                <label for="ConfirmPasswordInput" class="col-form-label col-form-label-sm">Confirm Password</label>
+                                <input type="password" class="form-control" id="ConfirmPasswordInput" placeholder="Confirm password" required>
+                            </div>
+                            <small id="PasswordInput" class="form-text text-muted">
+                                By clicking "Sign up for WeConnect", you agree to our
+                                <a href="#">terms of service</a> and
+                                <a href="#">privacy policy</a>.
+                            </small>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success btn btn-block">Sign up for WeConnect</button>
+                            </div>
+                            <small id="PasswordInput" class="form-text text-muted" style="text-align: center !important;">
+                                Already Registered?
+                                <a href="signin.html">Sign In </a>
+                            </small>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="js/jquery-3.2.1.slim.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</body>
+
+</html>
