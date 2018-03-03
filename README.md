@@ -27,11 +27,6 @@ To start using the WeConnect User Interfaces:
 ## Host Link
 [WeConnect](https://muthash.github.io/)
 
-## Images
-![Signin](/designs/UI/images/signin.png)
-![Dashboard](/designs/UI/images/dashboard.png)
-![Business registry](/designs/UI/images/biz.png)
-![Business Profile](/designs/UI/images/profile.png)
 
 ## Authors
 [Muthash](https://github.com/muthash)
