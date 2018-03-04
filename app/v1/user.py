@@ -28,12 +28,13 @@ class User():
 
     def generate_token(self, email):
         """Generates the access token"""
+        self.email = email
         try:
             payload = {
                 'iss': "weconnect",
                 'exp': datetime.utcnow() + timedelta(minutes=5),
                 'iat': datetime.utcnow(),
-                'sub': email
+                'sub': self.email
             }
             jwt_string = jwt.encode(
                 payload,
@@ -43,3 +44,14 @@ class User():
             return jwt_string
         except Exception as e:
             return str(e)
+
+    @staticmethod
+    def decode_token(token):
+        """Decodes the access token from the authorization header"""
+        try:
+            payload = jwt.decode(token, current_app.config.get('SECRET_KEY'))
+            return payload['sub']
+        except jwt.ExpiredSignatureError:
+            return "Expired token. Please login to get a new token"
+        except jwt.InvalidTokenError:
+            return "Invalid token. Please register or login"
