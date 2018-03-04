@@ -43,3 +43,23 @@ class AuthTestCase(unittest.TestCase):
         self.assertEqual(result['message'], "User already exists." +
                          "Please login")
         self.assertEqual(second_res.status_code, 202)
+
+    def test_user_login(self):
+        """Test registered user can login."""
+        self.user_data = {
+            'email': 'steve@example.com',
+            'username': 'stephen',
+            'password': 'test_password',
+            'cpassword': 'test_password'
+        }
+        res = self.client().post('/api/v1/register', data=self.user_data)
+        self.assertEqual(res.status_code, 201)
+        user_data = {
+            'email': 'steve@example.com',
+            'password': 'test_password'
+        }
+        login_res = self.client().post('/api/v1/login', data=user_data)
+        result = json.loads(login_res.data.decode())
+        self.assertEqual(result['message'], "You logged in successfully")
+        self.assertEqual(login_res.status_code, 200)
+
