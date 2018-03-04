@@ -17,4 +17,8 @@ def create_app(config_name):
     app.config.from_object(app_config[config_name])
     app.config.from_pyfile('config.py')
 
+    # import the version blueprint and register it on the app
+    from .v1 import v1
+    app.register_blueprint(v1)
+
     return app
