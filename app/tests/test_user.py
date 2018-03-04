@@ -16,3 +16,12 @@ class AuthTestCase(unittest.TestCase):
             'password': 'test_password',
             'cpassword': 'test_password'
         }
+
+    def test_registration(self):
+        """Test user registration works correcty."""
+        res = self.client().post('/api/v1/auth/register', data=self.user_data)
+        new_account = self.user_data['email'] in USERS.keys()
+        self.assertTrue(new_contact)
+        result = json.loads(res.data.decode())
+        self.assertEqual(result['message'], "You registered successfully")
+        self.assertEqual(res.status_code, 201)
