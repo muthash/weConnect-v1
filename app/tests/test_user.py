@@ -75,10 +75,10 @@ class AuthTestCase(unittest.TestCase):
         self.assertEqual(login_res.status_code, 401)
 
     def test_wrong_password_login(self):
-        """Test registered user can login."""
+        """Test registered user tries to login with wrong password"""
         self.user_data = {
             'email': 'wrong@example.com',
-            'username': 'steve',
+            'username': 'kathingo',
             'password': 'password',
             'cpassword': 'password'
         }
