@@ -2,14 +2,13 @@ import os
 import unittest
 
 import coverage
-from flask.cli import FlaskGroup
+import click
 from app import create_app
 
-import click
-# initialize the app with all its configurations
+
 app = create_app(config_name=os.getenv('APP_SETTINGS'))
 
-# code coverage
+
 COV = coverage.coverage(
     branch=True,
     include='app/*',
@@ -23,7 +22,6 @@ COV = coverage.coverage(
 COV.start()
 
 
-# define our command for testing called "test"
 @app.cli.command()
 def test():
     """Runs the unit tests without test coverage."""
