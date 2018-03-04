@@ -63,3 +63,14 @@ class AuthTestCase(unittest.TestCase):
         self.assertEqual(result['message'], "You logged in successfully")
         self.assertEqual(login_res.status_code, 200)
 
+    def test_unregistered_user_login(self):
+        user_data = {
+            'email': 'unreg@example.com',
+            'password': 'password'
+        }
+        login_res = self.client().post('/api/v1/login', data=user_data)
+        result = json.loads(login_res.data.decode())
+        self.assertEqual(result['message'], "This user does not exist." +
+                         " Please register")
+        self.assertEqual(login_res.status_code, 401)
+
