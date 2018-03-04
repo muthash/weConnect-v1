@@ -33,3 +33,33 @@ def register():
                 'message': 'User already exists.Please login'
         }
         return make_response(jsonify(response)), 202
+
+
+@v1.route('/login', methods=['GET', 'POST'])
+def login():
+    """This view handles user login and access token generation."""
+    if request.method == 'POST':
+        email = request.data['email']
+        password = request.data['password']
+        already_user = email in USERS.keys()
+        if already_user:
+            try:
+                try_login = user.login(email, password)
+                if try_login:
+                    response = {
+                        'message': 'You logged in successfully'
+                    }
+                    return make_response(jsonify(response)), 200
+                response = {
+                    'message': 'Invalid email or password'
+                }
+                return make_response(jsonify(response)), 401
+            except Exception as e:
+                response = {
+                    'message': str(e)
+                }
+                return make_response(jsonify(response)), 500
+        response = {
+                'message': 'This user does not exist. Please register'
+            }
+        return make_response(jsonify(response)), 401
