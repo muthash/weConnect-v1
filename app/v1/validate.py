@@ -13,3 +13,14 @@ def check_email(email):
     return False
 
 
+def check_name(username):
+    """ Method to check if username entered is valid """
+    blank_input = username != ''
+    stripname = username.strip()
+    newname = re.sub(r'\s+', '', stripname)
+    inline_space = len(newname) == len(username)
+    namelength = len(username)
+    length = namelength >= 6 and namelength <= 25
+    if blank_input == inline_space == length:
+        return True
+    return False
