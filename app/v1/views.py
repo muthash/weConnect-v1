@@ -30,6 +30,6 @@ def register():
                 }
                 return make_response(jsonify(response)), 401
         response = {
-                'message': 'You Already registered. Proceed to login'
+                'message': 'User already exists.Please login'
         }
-        return make_response(jsonify(response)), 401
+        return make_response(jsonify(response)), 202
