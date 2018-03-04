@@ -74,3 +74,22 @@ class AuthTestCase(unittest.TestCase):
                          " Please register")
         self.assertEqual(login_res.status_code, 401)
 
+    def test_wrong_password_login(self):
+        """Test registered user can login."""
+        self.user_data = {
+            'email': 'wrong@example.com',
+            'username': 'steve',
+            'password': 'password',
+            'cpassword': 'password'
+        }
+        res = self.client().post('/api/v1/register', data=self.user_data)
+        self.assertEqual(res.status_code, 201)
+        user_data = {
+            'email': 'wrong@example.com',
+            'password': 'test_password'
+        }
+        login_res = self.client().post('/api/v1/login', data=user_data)
+        result = json.loads(login_res.data.decode())
+        self.assertEqual(result['message'], "Invalid email or password")
+        self.assertEqual(login_res.status_code, 401)
+
