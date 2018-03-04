@@ -1,5 +1,6 @@
+import jwt
 from flask_bcrypt import Bcrypt
-
+from datetime import datetime, timedelta
 USERS = {}
 
 
@@ -24,3 +25,21 @@ class User():
         if Bcrypt().check_password_hash(dbvalues[1], self.password):
             return True
         return False
+
+    def generate_token(self, email):
+        """Generates the access token"""
+        try:
+            payload = {
+                'iss': "weconnect",
+                'exp': datetime.utcnow() + timedelta(minutes=5),
+                'iat': datetime.utcnow(),
+                'sub': email
+            }
+            jwt_string = jwt.encode(
+                payload,
+                current_app.config.get('SECRET_KEY'),
+                algorithm='HS256'
+            )
+            return jwt_string
+        except Exception as e:
+            return str(e)
