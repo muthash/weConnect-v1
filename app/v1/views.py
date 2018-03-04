@@ -2,7 +2,8 @@ import os
 from . import v1
 
 from flask import Flask, make_response, request, jsonify
-from .user import User, USERS
+from app.v1.user import User, USERS
+from app.v1 import validate as val
 
 user = User()
 
@@ -16,6 +17,18 @@ def register():
         password = request.data['password']
         cpassword = request.data['cpassword']
 
+        validated_email = val.check_email(email)
+        if not validated_email:
+            response = {
+                        'message': 'Invalid email address'
+                    }
+            return make_response(jsonify(response)), 400
+        validated_username = val.check_name(username)
+        if not validated_username:
+            response = {
+                        'message': 'Invalid username'
+                    }
+            return make_response(jsonify(response)), 400
         already_user = email in USERS.keys()
         if not already_user:
             try:
