@@ -14,3 +14,12 @@ class User():
         self.username = username
         self.password = password
         USERS[self.email] = [self.username, self.password]
+
+    def login(self, email, password):
+        self.email = email
+        self.password = password
+        """ Method to check if passwords match"""
+        dbvalues = USERS[self.email]
+        if self.password in dbvalues[1]:
+            return True
+        return False
