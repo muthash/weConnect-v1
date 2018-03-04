@@ -26,3 +26,20 @@ class AuthTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 201)
         new_account = self.user_data['email'] in USERS.keys()
         self.assertTrue(new_account)
+    
+    def test_already_registered_user(self):
+        """Test that a user cannot be registered twice."""
+        user_data = {
+            'email': 'reg@example.com',
+            'username': 'stephen',
+            'password': 'test_password',
+            'cpassword': 'test_password'
+        }
+        res = self.client().post('/api/v1/register', data=user_data)
+        self.assertEqual(res.status_code, 201)
+        second_res = self.client().post('/api/v1/register',
+                                        data=user_data)
+        result = json.loads(second_res.data.decode())
+        self.assertEqual(result['message'], "User already exists." +
+                         "Please login")
+        self.assertEqual(second_res.status_code, 202)
