@@ -8,7 +8,6 @@ class User():
         """Initialize the user with an email and a password."""
         self.email = None
         self.username = None
-        # self.password = Bcrypt().generate_password_hash(password).decode()
         self.password = None
 
     def create_account(self, email, username, password):
