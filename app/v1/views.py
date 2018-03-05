@@ -16,36 +16,18 @@ def register():
         email = data.get('email')
         username = data.get('username')
         password = data.get('password')
-        cpassword = data.get('cpassword')
-
-        validated_email = val.check_email(email)
-        if not validated_email:
-            response = {
-                        'message': 'Invalid email address'
-                    }
+        if not val.check_email(email):
+            response = {'message': 'Invalid email address'}
             return make_response(jsonify(response)), 400
-        validated_username = val.check_name(username)
-        if not validated_username:
-            response = {
-                        'message': 'Invalid username'
-                    }
-            return make_response(jsonify(response)), 400
-        already_user = email in USERS.keys()
-        if not already_user:
+        if not email in USERS.keys():
             try:
                 user.create_account(email, username, password)
-                response = {
-                        'message': 'You registered successfully'
-                    }
+                response = {'message': 'You registered successfully'}
                 return make_response(jsonify(response)), 201
             except Exception as e:
-                response = {
-                    'message': str(e)
-                }
+                response = {'message': str(e)}
                 return make_response(jsonify(response)), 401
-        response = {
-                'message': 'User already exists.Please login'
-        }
+        response = {'message': 'User already exists.Please login'}
         return make_response(jsonify(response)), 202
 
 
@@ -56,11 +38,9 @@ def login():
         data = request.get_json()
         email = data.get('email')
         password = data.get('password')
-        already_user = email in USERS.keys()
-        if already_user:
+        if email in USERS.keys():
             try:
-                try_login = user.login(email, password)
-                if try_login:
+                if user.login(email, password):
                     access_token = user.generate_token(email)
                     if access_token:
                         response = {
@@ -68,18 +48,12 @@ def login():
                             'access_token': access_token.decode()
                         }
                         return make_response(jsonify(response)), 200
-                response = {
-                    'message': 'Invalid email or password'
-                }
+                response = {'message': 'Invalid email or password'}
                 return make_response(jsonify(response)), 401
             except Exception as e:
-                response = {
-                    'message': str(e)
-                }
+                response = {'message': str(e)}
                 return make_response(jsonify(response)), 500
-        response = {
-                'message': 'This user does not exist. Please register'
-            }
+        response = {'message': 'This user does not exist. Please register'}
         return make_response(jsonify(response)), 401
 
 
@@ -95,18 +69,11 @@ def reset_password():
             old_pass = data.get('old_password')
             new_pass = data.get('password')
             try:
-                try_reset = user.reset_password(email, old_pass, new_pass)
-                if try_reset:
-                    response = {
-                        'message': 'password_reset successfull'
-                    }
+                if user.reset_password(email, old_pass, new_pass):
+                    response = {'message': 'password_reset successfull'}
                     return make_response(jsonify(response)), 201
             except Exception as e:
-                response = {
-                    'message': str(e)
-                }
+                response = {'message': str(e)}
                 return make_response(jsonify(response)), 500
-    response = {
-        'message': 'Login in to continue'
-    }
+    response = {'message': 'Login in to continue'}
     return make_response(jsonify(response)), 401
