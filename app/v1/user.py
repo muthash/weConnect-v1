@@ -8,27 +8,29 @@ USERS = {}
 
 class User():
     def __init__(self):
-        """Initialize the user with an email and a password."""
+        """Initialize the user with an email, a username and a password"""
         self.email = None
         self.username = None
         self.password = None
 
     def create_account(self, email, username, password):
+        """Add a new user account"""
         self.email = email
         self.username = username
         self.password = Bcrypt().generate_password_hash(password).decode()
         USERS[self.email] = [self.username, self.password]
 
     def login(self, email, password):
+        """Login in user"""
         self.email = email
         self.password = password
-        """ Method to check if passwords match"""
         dbvalues = USERS[self.email]
         if Bcrypt().check_password_hash(dbvalues[1], self.password):
             return True
         return False
 
     def reset_password(self, email, old_pass, new_pass):
+        """Enables user to reset their password"""
         user_values = USERS[email]
         if Bcrypt().check_password_hash(user_values[1], old_pass):
             self.password = Bcrypt().generate_password_hash(new_pass).decode()
@@ -67,3 +69,7 @@ class User():
             return "Expired token. Please login to get a new token"
         except jwt.InvalidTokenError:
             return "Invalid token. Please register or login"
+
+    def __repr__(self):
+        """ Return formatted user object"""
+        return "Email: {}".format(self.email) + "Username: {}".format(self.username)
