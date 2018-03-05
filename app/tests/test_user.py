@@ -149,4 +149,4 @@ class AuthTestCase(unittest.TestCase):
             data=json.dumps(new_password))
         result = json.loads(reset_res.data.decode())
         self.assertEqual(result['message'], "password_reset successfull")
-        self.assertEqual(login_res.status_code, 201)
+        self.assertEqual(reset_res.status_code, 201)
