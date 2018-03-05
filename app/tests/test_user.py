@@ -19,6 +19,7 @@ class AuthTestCase(unittest.TestCase):
                 headers={'Content-Type': 'application/json'},
                 data=json.dumps(user_data)
                )
+
     def login_user(self, email="user@test.com", password="test1234"):
         """This helper method helps log in a test user."""
         user_data = {'email': email, 'password': password}
