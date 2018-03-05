@@ -81,3 +81,24 @@ def login():
                 'message': 'This user does not exist. Please register'
             }
         return make_response(jsonify(response)), 401
+
+
+@v1.route('/reset-password', methods=['POST'])
+def reset_password():
+    """This view handles user login and access token generation."""
+    auth_header = request.headers.get('Authorization')
+    access_token = auth_header.split(" ")[1]
+
+    if access_token:
+        email = user.decode_token(access_token)
+        if email in USERS.keys():
+            data = request.get_json()
+            old_pass = data.get('old_password')
+            new_pass = data.get('password')
+            try:
+                try_reset = user.reset_password(old_pass, new_pass)
+            except Exception as e:
+                response = {
+                    'message': str(e)
+                }
+                return make_response(jsonify(response)), 500
