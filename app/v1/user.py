@@ -28,6 +28,16 @@ class User():
             return True
         return False
 
+    def reset_password(self, email, old_pass, new_pass):
+        user_values = USERS[email]
+        if Bcrypt().check_password_hash(user_values[1], old_pass):
+            self.password = Bcrypt().generate_password_hash(new_pass).decode()
+            USERS[email][1] = self.password
+            if USERS[email][1] == self.password:
+                return True
+            return False
+        return False
+
     def generate_token(self, email):
         """Generates the access token"""
         self.email = email
