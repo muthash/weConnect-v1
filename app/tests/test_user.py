@@ -114,3 +114,39 @@ class AuthTestCase(unittest.TestCase):
         result = json.loads(login_res.data.decode())
         self.assertEqual(result['message'], "Invalid email or password")
         self.assertEqual(login_res.status_code, 401)
+    
+    def test_password_reset(self):
+        self.user_data = {
+            'email': 'reset@example.com',
+            'username': 'stephen',
+            'password': 'test_password',
+            'cpassword': 'test_password'
+        }
+        res = self.client().post(
+            '/api/v1/register',
+            headers={'Content-Type': 'application/json'},
+            data=json.dumps(self.user_data))
+        self.assertEqual(res.status_code, 201)
+        reset_data = {
+            'email': 'reset@example.com',
+            'password': 'test_password'
+        }
+        login_res = self.client().post(
+            '/api/v1/login',
+            headers={'Content-Type': 'application/json'},
+            data=json.dumps(reset_data))
+        self.assertEqual(login_res.status_code, 200)    
+        access_token = json.loads(login_res.data.decode())['access_token']
+        new_password = {
+            'old_password': 'test_password',
+            'password': 'password'
+        }
+        # reset password by making a POST request
+        reset_res = self.client().post(
+            '/api/v1/reset-password',
+            headers={'Content-Type': 'application/json',
+                     'Authorization': 'Bearer ' + access_token},
+            data=json.dumps(new_password))
+        result = json.loads(reset_res.data.decode())
+        self.assertEqual(result['message'], "password_reset successfull")
+        self.assertEqual(login_res.status_code, 201)
