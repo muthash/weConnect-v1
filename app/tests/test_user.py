@@ -1,7 +1,6 @@
 import unittest
 import json
 from app import create_app
-from app.v1.user import USERS
 
 
 class AuthTestCase(unittest.TestCase):
