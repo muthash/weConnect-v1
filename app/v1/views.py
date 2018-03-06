@@ -108,8 +108,8 @@ def businesses():
             obj = [{ 
                 'id': biz.businessId,
                 'name': biz.businessName,
-                'date_created': biz.category,
-                'date_modified': biz.location,
+                'categoty': biz.category,
+                'location': biz.location,
                 'created_by': biz.created_by
             }]
         response = { 'business': obj}
@@ -117,31 +117,49 @@ def businesses():
     response = {'message': 'Login in to continue'}
     return make_response(jsonify(response)), 401
 
-@v1.route('/api//businesses/<int:id>', methods=['GET', 'PUT', 'DELETE'])
-def businesses_manipulation(id, **kwargs):
+@v1.route('/businesses/<int:bizid>', methods=['GET', 'PUT', 'DELETE'])
+def businesses_manipulation(bizid, **kwargs):
     auth_header = request.headers.get('Authorization')
     access_token = auth_header.split(" ")[1]
     if access_token:
         email = user.decode_token(access_token)
         if email in USERS.keys():
             businessIds = [biz.businessId for biz in bizneses]
-            if id not in businessIds:
+            if bizid not in businessIds:
                 abort(404)
             if request.method == "DELETE":
                 print("Delete")
             elif request.method == 'PUT':
-                print("PUT")
+                for biz in bizneses:
+                    if biz.businessId == bizid and biz.created_by == email:
+                        data = request.get_json()
+                        businessName = data.get('businessName')
+                        category = data.get('category')
+                        location = data.get('location')
+                        bizneses[bizid-1] = (Business(bizid, businessName, category, location, email))
+                        update = bizneses[bizid-1]
+                        obj = { 
+                            'id': update.businessId,
+                            'name': update.businessName,
+                            'category': update.category,
+                            'location': update.location,
+                            'created_by': update.created_by
+                        }
+                        response = {'business': obj}
+                        return make_response(jsonify(response)), 200
+                    response = {'message': 'Forbidden'}
+                    return make_response(jsonify(response)), 403
             else:
                 for biz in bizneses:
-                    if biz.businessId == id:
+                    if biz.businessId == bizid:
                         obj = { 
                             'id': biz.businessId,
                             'name': biz.businessName,
-                            'date_created': biz.category,
-                            'date_modified': biz.location,
+                            'category': biz.category,
+                            'location': biz.location,
                             'created_by': biz.created_by
                         }
-                response = { 'business': obj}
+                response = {'business': obj}
                 return make_response(jsonify(response)), 200
         response = {'message': 'Login in to continue'}
         return make_response(jsonify(response)), 401
