@@ -120,3 +120,26 @@ class AuthTestCase(unittest.TestCase):
         self.assertEqual('KenGen', bizName['name'])
         self.assertEqual('Geothrmal', bizName['category'])
         self.assertEqual('Nakuru', bizName['location'])
+
+    def test_business_delition(self):
+        """Test API can delete an existing business. (DELETE request)."""
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['access_token']
+        res = self.client().post(
+            '/api/v1/businesses',
+            headers={'Content-Type': 'application/json',
+                     'Authorization': 'Bearer ' + access_token},
+            data=json.dumps(self.business)
+        )
+        bizIds = json.loads(res.data.decode())['business']
+        res2 = self.client().delete(
+            '/api/v1/businesses/{}'.format(bizIds[0]),
+            headers={'Authorization': 'Bearer ' + access_token}
+        )
+        self.assertEqual(res2.status_code, 200)
+        res3 = self.client().get(
+            '/api/v1/businesses/{}'.format(bizIds[0]),
+            headers={'Authorization': 'Bearer ' + access_token}
+        )
+        self.assertEqual(res3.status_code, 404)
