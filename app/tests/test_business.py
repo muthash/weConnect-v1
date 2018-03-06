@@ -15,7 +15,7 @@ class AuthTestCase(unittest.TestCase):
             'category': 'Lighting',
             'location': 'Nairobi'
         }
-        self.to_edit = {
+        self.edit_data = {
             'businessName': 'KenGen',
             'category': 'Geothrmal',
             'location': 'Nakuru'
@@ -39,7 +39,7 @@ class AuthTestCase(unittest.TestCase):
                 data=json.dumps(user_data)
                )
 
-    def register_business(self, Name="Kenya Power", category="Lighting", location="Nairobi"):
+    def register_business(self, Name="KTDA", category="Farming", location="Narok"):
         """This helper method helps register a test business"""
         self.register_user()
         result = self.login_user()
@@ -112,8 +112,9 @@ class AuthTestCase(unittest.TestCase):
         bizIds = json.loads(res.data.decode())['business']
         result2 = self.client().put(
             '/api/v1/businesses/{}'.format(bizIds[0]),
-            headers={'Authorization': 'Bearer ' + access_token},
-            data=json.dumps(self.to_edit)
+            headers={'Content-Type': 'application/json',
+                     'Authorization': 'Bearer ' + access_token},
+            data=json.dumps(self.edit_data)
         )
         bizName = json.loads(result2.data.decode())['business']
         self.assertEqual('KenGen', bizName['name'])
