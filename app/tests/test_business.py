@@ -34,16 +34,20 @@ class AuthTestCase(unittest.TestCase):
                 data=json.dumps(user_data)
                )
 
-    def test_business_creation(self):
-        """Test the API can create a bussiness (POST request)"""
+    def register_business(self, Name="Kenya Power", category="Lighting", location="Nairobi"):
+        """This helper method helps register a test business"""
         self.register_user()
         result = self.login_user()
         access_token = json.loads(result.data.decode())['access_token']
-        res = self.client().post(
-            '/api/v1/businesses',
-            headers={'Content-Type': 'application/json',
-                     'Authorization': 'Bearer ' + access_token},
-            data=json.dumps(self.business))
+        return self.client().post(
+                '/api/v1/businesses',
+                headers={'Content-Type': 'application/json',
+                         'Authorization': 'Bearer ' + access_token},
+                data=json.dumps(self.business))
+
+    def test_business_creation(self):
+        """Test the API can create a bussiness (POST request)"""
+        res = self.register_business()
         bizIds = json.loads(res.data.decode())['business']
         self.assertIsInstance(bizIds, list)
         self.assertTrue(bizIds)
@@ -86,4 +90,5 @@ class AuthTestCase(unittest.TestCase):
             headers={'Authorization': 'Bearer ' + access_token}
         )
         self.assertEqual(result2.status_code, 200)
-        self.assertIn('Kenya Power', str(result2.data))
+        bizName = json.loads(result2.data.decode())['business']
+        self.assertEqual('Kenya Power', bizName['name'])
