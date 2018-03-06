@@ -128,7 +128,11 @@ def businesses_manipulation(bizid, **kwargs):
             if bizid not in businessIds:
                 abort(404)
             if request.method == "DELETE":
-                print("Delete")
+                for biz in bizneses:
+                    if biz.businessId == bizid and biz.created_by == email:
+                        del bizneses[bizid-1]
+                        response = {"message": "business {} deleted".format(bizid)}
+                        return make_response(jsonify(response)), 200
             elif request.method == 'PUT':
                 for biz in bizneses:
                     if biz.businessId == bizid and biz.created_by == email:
