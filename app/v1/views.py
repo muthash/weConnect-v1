@@ -168,4 +168,14 @@ def businesses_manipulation(bizid):
         response = {'message': 'Login in to continue'}
         return make_response(jsonify(response)), 401
 
-
+@v1.route('/businesses/<int:bizid>', methods=['POST', 'GET'])
+def reviews(bizid):
+    auth_header = request.headers.get('Authorization')
+    access_token = auth_header.split(" ")[1]
+    if access_token:
+        email = user.decode_token(access_token)
+        if request.method == 'POST':
+            if email in USERS.keys():
+                data = request.get_json()
+                review = data.get('review')
+                
