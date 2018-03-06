@@ -15,6 +15,11 @@ class AuthTestCase(unittest.TestCase):
             'category': 'Lighting',
             'location': 'Nairobi'
         }
+        self.to_edit = {
+            'businessName': 'KenGen',
+            'category': 'Geothrmal',
+            'location': 'Nakuru'
+        }
 
     def register_user(self, email="business@test.com", username="stephen", password="test1234"):
         """This helper method helps register a test user."""
@@ -92,3 +97,25 @@ class AuthTestCase(unittest.TestCase):
         self.assertEqual(result2.status_code, 200)
         bizName = json.loads(result2.data.decode())['business']
         self.assertEqual('Kenya Power', bizName['name'])
+
+    def test_business_can_be_edited(self):
+        """Test API can edit an existing business. (PUT request)"""
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['access_token']
+        res = self.client().post(
+            '/api/v1/businesses',
+            headers={'Content-Type': 'application/json',
+                     'Authorization': 'Bearer ' + access_token},
+            data=json.dumps(self.business)
+        )
+        bizIds = json.loads(res.data.decode())['business']
+        result2 = self.client().put(
+            '/api/v1/businesses/{}'.format(bizIds[0]),
+            headers={'Authorization': 'Bearer ' + access_token},
+            data=json.dumps(self.to_edit)
+        )
+        bizName = json.loads(result2.data.decode())['business']
+        self.assertEqual('KenGen', bizName['name'])
+        self.assertEqual('Geothrmal', bizName['category'])
+        self.assertEqual('Nakuru', bizName['location'])
