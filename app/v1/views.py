@@ -1,7 +1,7 @@
 import os
 from app.v1 import v1
 
-from flask import Blueprint, make_response, request, jsonify, json
+from flask import Blueprint, make_response, request, abort, jsonify, json
 from app.v1.user import User, USERS
 from app.v1 import validate as val
 from app.v1.business import Business
@@ -105,15 +105,45 @@ def businesses():
                     response = {'message': str(e)}
                     return make_response(jsonify(response)), 401
         for biz in bizneses:
-            obj = { 
-                biz.businessId:{
-                    'name': biz.businessName,
-                    'date_created': biz.category,
-                    'date_modified': biz.location,
-                    'created_by': biz.created_by
-                }
-            }
+            obj = [{ 
+                'id': biz.businessId,
+                'name': biz.businessName,
+                'date_created': biz.category,
+                'date_modified': biz.location,
+                'created_by': biz.created_by
+            }]
         response = { 'business': obj}
         return make_response(jsonify(response)), 200
     response = {'message': 'Login in to continue'}
     return make_response(jsonify(response)), 401
+
+@v1.route('/api//businesses/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def businesses_manipulation(id, **kwargs):
+    auth_header = request.headers.get('Authorization')
+    access_token = auth_header.split(" ")[1]
+    if access_token:
+        email = user.decode_token(access_token)
+        if email in USERS.keys():
+            businessIds = [biz.businessId for biz in bizneses]
+            if id not in businessIds:
+                abort(404)
+            if request.method == "DELETE":
+                print("Delete")
+            elif request.method == 'PUT':
+                print("PUT")
+            else:
+                for biz in bizneses:
+                    if biz.businessId == id:
+                        obj = { 
+                            'id': biz.businessId,
+                            'name': biz.businessName,
+                            'date_created': biz.category,
+                            'date_modified': biz.location,
+                            'created_by': biz.created_by
+                        }
+                response = { 'business': obj}
+                return make_response(jsonify(response)), 200
+        response = {'message': 'Login in to continue'}
+        return make_response(jsonify(response)), 401
+
+
