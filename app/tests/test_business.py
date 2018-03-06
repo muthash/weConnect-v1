@@ -11,7 +11,6 @@ class AuthTestCase(unittest.TestCase):
         self.app = create_app(config_name="testing")
         self.client = self.app.test_client
         self.business = {
-            'businessId': '1',
             'businessName': 'Kenya Power',
             'category': 'Lighting',
             'location': 'Nairobi'
@@ -46,7 +45,9 @@ class AuthTestCase(unittest.TestCase):
                      'Authorization': 'Bearer ' + access_token},
             data=json.dumps(self.business))
         bizIds = json.loads(res.data.decode())['business']
-        self.assertIn("1", bizIds)
+        self.assertIsInstance(bizIds, list)
+        self.assertTrue(bizIds)
+        self.assertIn(1, bizIds)
         self.assertEqual(res.status_code, 201)
 
     def test_get_all_businesses(self):
@@ -66,4 +67,4 @@ class AuthTestCase(unittest.TestCase):
         )
         biz = json.loads(res.data.decode())
         self.assertTrue(biz)
-        self.assertEqual(res.status_code, 201)
+        self.assertEqual(res.status_code, 200)
