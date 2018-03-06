@@ -7,7 +7,7 @@ from app.v1 import validate as val
 from app.v1.business import Business
 
 user = User()
-business = []
+bizneses = []
 
 @v1.route('/register', methods=['GET', 'POST'])
 def register():
@@ -88,25 +88,32 @@ def businesses():
         if request.method == 'POST':
             if email in USERS.keys():
                 data = request.get_json()
-                businessId = data.get('businessId')
+                businessId = len(bizneses) + 1
                 businessName = data.get('businessName')
                 category = data.get('category')
                 location = data.get('location')
                 created_by = email
                 try:
-                    created_biz = Business(businessId, businessName, category, location, created_by)
-                    business.append(created_biz)
-                    for ids in business:
-                        bizId = ids.businessId
+                    bizneses.append(Business(businessId, businessName, category, location, created_by))
+                    businessIds = [biz.businessId for biz in bizneses]
                     response = {
                         'message': 'business created successfully',
-                        'business': bizId
+                        'business': businessIds
                     }
                     return make_response(jsonify(response)), 201
                 except Exception as e:
                     response = {'message': str(e)}
                     return make_response(jsonify(response)), 401
-        response = { 'business': business}
+        for biz in bizneses:
+            obj = { 
+                biz.businessId:{
+                    'name': biz.businessName,
+                    'date_created': biz.category,
+                    'date_modified': biz.location,
+                    'created_by': biz.created_by
+                }
+            }
+        response = { 'business': obj}
         return make_response(jsonify(response)), 200
     response = {'message': 'Login in to continue'}
     return make_response(jsonify(response)), 401
