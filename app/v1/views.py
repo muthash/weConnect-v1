@@ -118,7 +118,7 @@ def businesses():
     return make_response(jsonify(response)), 401
 
 @v1.route('/businesses/<int:bizid>', methods=['GET', 'PUT', 'DELETE'])
-def businesses_manipulation(bizid, **kwargs):
+def businesses_manipulation(bizid):
     auth_header = request.headers.get('Authorization')
     access_token = auth_header.split(" ")[1]
     if access_token:
