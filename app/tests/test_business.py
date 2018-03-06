@@ -68,3 +68,22 @@ class AuthTestCase(unittest.TestCase):
         biz = json.loads(res.data.decode())
         self.assertTrue(biz)
         self.assertEqual(res.status_code, 200)
+
+    def test_api_can_get_business_by_id(self):
+        """Test API can get a single business by using it's Id"""
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['access_token']
+        res = self.client().post(
+            '/api/v1/businesses',
+            headers={'Content-Type': 'application/json',
+                     'Authorization': 'Bearer ' + access_token},
+            data=json.dumps(self.business)
+        )
+        bizIds = json.loads(res.data.decode())['business']
+        result2 = self.client().get(
+            '/api/v1/businesses/{}'.format(bizIds[0]),
+            headers={'Authorization': 'Bearer ' + access_token}
+        )
+        self.assertEqual(result2.status_code, 200)
+        self.assertIn('Kenya Power', str(result2.data))
