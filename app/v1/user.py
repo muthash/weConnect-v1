@@ -3,52 +3,24 @@ from flask import Flask, current_app
 import jwt
 from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
-USERS = {}
 
 
 class User():
-    def __init__(self):
+    def __init__(self, email, username, password):
         """Initialize the user with an email, a username and a password"""
-        self.email = None
-        self.username = None
-        self.password = None
-
-    def create_account(self, email, username, password):
-        """Add a new user account"""
         self.email = email
         self.username = username
         self.password = Bcrypt().generate_password_hash(password).decode()
-        USERS[self.email] = [self.username, self.password]
 
-    def login(self, email, password):
-        """Login in user"""
-        self.email = email
-        self.password = password
-        dbvalues = USERS[self.email]
-        if Bcrypt().check_password_hash(dbvalues[1], self.password):
-            return True
-        return False
-
-    def reset_password(self, email, old_pass, new_pass):
-        """Enables user to reset their password"""
-        user_values = USERS[email]
-        if Bcrypt().check_password_hash(user_values[1], old_pass):
-            self.password = Bcrypt().generate_password_hash(new_pass).decode()
-            USERS[email][1] = self.password
-            if USERS[email][1] == self.password:
-                return True
-            return False
-        return False
-
-    def generate_token(self, email):
+    @staticmethod
+    def generate_token(email):
         """Generates the access token"""
-        self.email = email
         try:
             payload = {
                 'iss': "weconnect",
                 'exp': datetime.utcnow() + timedelta(minutes=5),
                 'iat': datetime.utcnow(),
-                'sub': self.email
+                'sub': email
             }
             jwt_string = jwt.encode(
                 payload,
@@ -69,7 +41,3 @@ class User():
             return "Expired token. Please login to get a new token"
         except jwt.InvalidTokenError:
             return "Invalid token. Please register or login"
-
-    def __repr__(self):
-        """ Return formatted user object"""
-        return "Email: {}".format(self.email) + "Username: {}".format(self.username)
