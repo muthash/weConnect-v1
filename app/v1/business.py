@@ -9,6 +9,12 @@ class Business():
         self.created_by = created_by
         self.reviews = []
 
+    def add_review(self, name):
+        self.reviews.append(name)
+
+    def get_reviews(self):
+        return self.reviews
+
     def __str__(self):
         business = {'businessId': self.businessId,
                     'businessName': self.businessName,
