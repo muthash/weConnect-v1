@@ -60,3 +60,32 @@ class AuthTestCase(unittest.TestCase):
         reviews = json.loads(res3.data.decode())['reviews']
         self.assertEqual(res3.status_code, 201)
         self.assertIn('A very awesome review', reviews)
+
+    def test_get_all_business_reviews(self):
+        """Test the API can get all business reviews"""
+        self.register_user()
+        res = self.login_user()
+        access_token = json.loads(res.data.decode())['access_token']
+        res2 = self.client().post(
+            '/api/v1/businesses',
+            headers={'Content-Type': 'application/json',
+                     'Authorization': 'Bearer ' + access_token},
+            data=json.dumps(self.business)
+        )
+        bizIds = json.loads(res2.data.decode())['business']
+        self.register_user("reviewer2@test.com", "stephen", "test1234")
+        res4 = self.login_user("reviewer2@test.com", "test1234")
+        access_token = json.loads(res4.data.decode())['access_token']
+        res3 = self.client().post(
+            '/api/v1/businesses/{}/reviews'.format(bizIds[0]),
+            headers={'Content-Type': 'application/json',
+                     'Authorization': 'Bearer ' + access_token},
+            data=json.dumps(self.review)
+        )
+        res3 = self.client().get(
+            '/api/v1/businesses/{}/reviews'.format(bizIds[0]),
+            headers={'Authorization': 'Bearer ' + access_token}
+        )
+        biz = json.loads(res3.data.decode())['reviews']
+        self.assertTrue(biz)
+        self.assertEqual(res.status_code, 200)
