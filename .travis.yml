@@ -7,8 +7,5 @@ install:
 script:
   - nosetests --with-coverage
   - coverage report
-branches:
-  only:
-    -challenge2
 after_success:
   - coveralls
