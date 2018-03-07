@@ -178,6 +178,7 @@ def reviews(bizid):
             if email in USERS.keys():    
                 data = request.get_json()
                 review = data.get('name')
+                print(review)
                 try:
                     for biz in bizneses:
                         if biz.businessId == bizid and biz.created_by != email:
@@ -191,5 +192,10 @@ def reviews(bizid):
                 except Exception as e:
                     response = {'message': str(e)}
                     return make_response(jsonify(response)), 403
+        for biz in bizneses:
+            if biz.businessId == bizid:
+                obj = biz.reviews
+        response = {'reviews': obj}
+        return make_response(jsonify(response)), 200
 
 
