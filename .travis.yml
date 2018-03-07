@@ -3,9 +3,13 @@ python:
   - 3.6.2
 install:
   - pip install -r requirements.txt
+  - pip install nose
   - pip install coveralls  
 script:
   - nosetests
   - coverage report
+branches:
+  only:
+    -challenge2
 after_success:
   - coveralls
