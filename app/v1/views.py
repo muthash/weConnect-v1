@@ -168,14 +168,28 @@ def businesses_manipulation(bizid):
         response = {'message': 'Login in to continue'}
         return make_response(jsonify(response)), 401
 
-@v1.route('/businesses/<int:bizid>', methods=['POST', 'GET'])
+@v1.route('/businesses/<int:bizid>/reviews', methods=['POST', 'GET'])
 def reviews(bizid):
     auth_header = request.headers.get('Authorization')
     access_token = auth_header.split(" ")[1]
     if access_token:
         email = user.decode_token(access_token)
         if request.method == 'POST':
-            if email in USERS.keys():
+            if email in USERS.keys():    
                 data = request.get_json()
-                review = data.get('review')
-                
+                review = data.get('name')
+                try:
+                    for biz in bizneses:
+                        if biz.businessId == bizid and biz.created_by != email:
+                            biz.add_review(review)
+                            revs = bizneses[bizid-1]
+                    response = {
+                        'message': 'review created successfully',
+                        'reviews': revs.reviews
+                    }
+                    return make_response(jsonify(response)), 201
+                except Exception as e:
+                    response = {'message': str(e)}
+                    return make_response(jsonify(response)), 403
+
+
