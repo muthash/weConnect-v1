@@ -17,7 +17,7 @@ class AuthTestCase(unittest.TestCase):
             'location': 'Nairobi'
         }
     
-    def register_user(self, email="review@test.com", username="stephen", password="test1234"):
+    def register_user(self, email="reviewer@test.com", username="stephen", password="test1234"):
         """This helper method helps register a test user."""
         user_data = {'email': email, 'username': username, 'password': password}
         return self.client().post(
@@ -26,7 +26,7 @@ class AuthTestCase(unittest.TestCase):
                 data=json.dumps(user_data)
                )
 
-    def login_user(self, email="review@test.com", password="test1234"):
+    def login_user(self, email="reviewer@test.com", password="test1234"):
         """This helper method helps log in a test user."""
         user_data = {'email': email, 'password': password}
         return self.client().post(
@@ -47,15 +47,16 @@ class AuthTestCase(unittest.TestCase):
             data=json.dumps(self.business)
         )
         bizIds = json.loads(res2.data.decode())['business']
-        res3 = self.client().get(
-            '/api/v1/businesses/{}'.format(bizIds[0]),
-            headers={'Authorization': 'Bearer ' + access_token}
-        )
-        self.assertEqual(res3.status_code, 200)
-        res3 = self.client().get(
+        
+        self.register_user("reviewer2@test.com", "stephen", "test1234")
+        res4 = self.login_user("reviewer2@test.com", "test1234")
+        access_token = json.loads(res4.data.decode())['access_token']
+        res3 = self.client().post(
             '/api/v1/businesses/{}/reviews'.format(bizIds[0]),
-            headers={'Authorization': 'Bearer ' + access_token}
+            headers={'Content-Type': 'application/json',
+                     'Authorization': 'Bearer ' + access_token},
+            data=json.dumps(self.review)
         )
         reviews = json.loads(res3.data.decode())['reviews']
-        self.assertEqual(res.status_code, 201)
+        self.assertEqual(res3.status_code, 201)
         self.assertIn('A very awesome review', reviews)
