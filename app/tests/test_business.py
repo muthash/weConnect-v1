@@ -53,10 +53,10 @@ class AuthTestCase(unittest.TestCase):
     def test_business_creation(self):
         """Test the API can create a bussiness (POST request)"""
         res = self.register_business()
-        bizIds = json.loads(res.data.decode())['business']
-        self.assertIsInstance(bizIds, list)
-        self.assertTrue(bizIds)
-        self.assertIn(1, bizIds)
+        biz_Names = json.loads(res.data.decode())['business']
+        self.assertIsInstance(biz_Names, list)
+        self.assertTrue(biz_Names)
+        self.assertIn("Kenya Power", biz_Names)
         self.assertEqual(res.status_code, 201)
 
     def test_get_all_businesses(self):
@@ -89,7 +89,7 @@ class AuthTestCase(unittest.TestCase):
                      'Authorization': 'Bearer ' + access_token},
             data=json.dumps(self.business)
         )
-        bizIds = json.loads(res.data.decode())['business']
+        bizIds = json.loads(res.data.decode())['id']
         result2 = self.client().get(
             '/api/v1/businesses/{}'.format(bizIds[0]),
             headers={'Authorization': 'Bearer ' + access_token}
@@ -109,7 +109,7 @@ class AuthTestCase(unittest.TestCase):
                      'Authorization': 'Bearer ' + access_token},
             data=json.dumps(self.business)
         )
-        bizIds = json.loads(res.data.decode())['business']
+        bizIds = json.loads(res.data.decode())['id']
         result2 = self.client().put(
             '/api/v1/businesses/{}'.format(bizIds[0]),
             headers={'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ class AuthTestCase(unittest.TestCase):
                      'Authorization': 'Bearer ' + access_token},
             data=json.dumps(self.business)
         )
-        bizIds = json.loads(res.data.decode())['business']
+        bizIds = json.loads(res.data.decode())['id']
         res2 = self.client().delete(
             '/api/v1/businesses/{}'.format(bizIds[0]),
             headers={'Authorization': 'Bearer ' + access_token}
