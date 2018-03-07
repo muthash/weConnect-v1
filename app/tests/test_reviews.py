@@ -46,7 +46,7 @@ class AuthTestCase(unittest.TestCase):
                      'Authorization': 'Bearer ' + access_token},
             data=json.dumps(self.business)
         )
-        bizIds = json.loads(res2.data.decode())['business']
+        bizIds = json.loads(res2.data.decode())['id']
         
         self.register_user("reviewer2@test.com", "stephen", "test1234")
         res4 = self.login_user("reviewer2@test.com", "test1234")
@@ -63,8 +63,8 @@ class AuthTestCase(unittest.TestCase):
 
     def test_get_all_business_reviews(self):
         """Test the API can get all business reviews"""
-        self.register_user()
-        res = self.login_user()
+        self.register_user("reviewer3@test.com", "stephen", "test1234")
+        res = self.login_user("reviewer3@test.com", "test1234")
         access_token = json.loads(res.data.decode())['access_token']
         res2 = self.client().post(
             '/api/v1/businesses',
@@ -72,9 +72,9 @@ class AuthTestCase(unittest.TestCase):
                      'Authorization': 'Bearer ' + access_token},
             data=json.dumps(self.business)
         )
-        bizIds = json.loads(res2.data.decode())['business']
-        self.register_user("reviewer2@test.com", "stephen", "test1234")
-        res4 = self.login_user("reviewer2@test.com", "test1234")
+        bizIds = json.loads(res2.data.decode())['id']
+        self.register_user("reviewer4@test.com", "stephen", "test1234")
+        res4 = self.login_user("reviewer4@test.com", "test1234")
         access_token = json.loads(res4.data.decode())['access_token']
         res3 = self.client().post(
             '/api/v1/businesses/{}/reviews'.format(bizIds[0]),
