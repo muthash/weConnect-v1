@@ -1,104 +1,115 @@
 import os
+import random
 from app.v1 import v1
 
 from flask import Blueprint, make_response, request, abort, jsonify, json
-from app.v1.user import User, USERS
+from flask_bcrypt import Bcrypt
+from app.v1.user import User
 from app.v1 import validate as val
 from app.v1.business import Business
 
-user = User()
+users = []
 bizneses = []
+
 
 @v1.route('/register', methods=['GET', 'POST'])
 def register():
-    """This class registers a new user."""
+    """This route registers a new user."""
     if request.method == 'POST':
         data = request.get_json()
         email = data.get('email')
         username = data.get('username')
         password = data.get('password')
-        if not val.check_email(email):
-            response = {'message': 'Invalid email address'}
-            return make_response(jsonify(response)), 400
-        if not email in USERS.keys():
-            try:
-                user.create_account(email, username, password)
-                response = {'message': 'You registered successfully'}
-                return make_response(jsonify(response)), 201
-            except Exception as e:
-                response = {'message': str(e)}
-                return make_response(jsonify(response)), 401
-        response = {'message': 'User already exists.Please login'}
-        return make_response(jsonify(response)), 202
+        if val.check_email(email):
+            emails = [user.email for user in users]
+            if email not in emails:
+                try:
+                    created_user = User(email, username, password)
+                    users.append(created_user)
+                    response = {'message': 'You registered successfully'}
+                    return jsonify(response), 201
+                except Exception as e:
+                    response = {'message': str(e)}
+                    return make_response(response)
+            response = {'message': 'User already exists. Please login'}
+            return jsonify(response), 202
 
 
 @v1.route('/login', methods=['GET', 'POST'])
 def login():
-    """This view handles user login and access token generation."""
+    """This route  logs in a user."""
     if request.method == 'POST':
         data = request.get_json()
         email = data.get('email')
         password = data.get('password')
-        if email in USERS.keys():
+        credentials = {user.email: user.password for user in users}
+        if email in credentials.keys():
             try:
-                if user.login(email, password):
-                    access_token = user.generate_token(email)
+                encrypted_password = credentials[email]
+                if Bcrypt().check_password_hash(encrypted_password, password):
+                    access_token = User.generate_token(email)
                     if access_token:
                         response = {
-                            'message': 'You logged in successfully',
+                            'message': 'Login successfull',
                             'access_token': access_token.decode()
                         }
-                        return make_response(jsonify(response)), 200
+                        return jsonify(response), 200
                 response = {'message': 'Invalid email or password'}
-                return make_response(jsonify(response)), 401
+                return jsonify(response), 401
             except Exception as e:
                 response = {'message': str(e)}
                 return make_response(jsonify(response)), 500
-        response = {'message': 'This user does not exist. Please register'}
-        return make_response(jsonify(response)), 401
+        response = {'message': 'User does not exist. Proceed to register'}
+        return jsonify(response), 401
 
 
 @v1.route('/reset-password', methods=['POST'])
 def reset_password():
-    """This view handles user login and access token generation."""
+    """Handles password reset"""
     auth_header = request.headers.get('Authorization')
     access_token = auth_header.split(" ")[1]
     if access_token:
-        email = user.decode_token(access_token)
-        if email in USERS.keys():
+        email = User.decode_token(access_token)
+        credentials = {user.email: user.username for user in users}
+        if email in credentials.keys():
             data = request.get_json()
-            old_pass = data.get('old_password')
-            new_pass = data.get('password')
+            new_pass = Bcrypt().generate_password_hash(data.get('new_password')).decode()
             try:
-                if user.reset_password(email, old_pass, new_pass):
-                    response = {'message': 'password_reset successfull'}
-                    return make_response(jsonify(response)), 201
+                for user in users:
+                    if user.email == email: 
+                        user.password = new_pass
+                        response = {'message': 'password_reset successfull'}
+                return make_response(jsonify(response)), 201
             except Exception as e:
                 response = {'message': str(e)}
                 return make_response(jsonify(response)), 500
     response = {'message': 'Login in to continue'}
     return make_response(jsonify(response)), 401
 
+
 @v1.route('/businesses', methods=['POST', 'GET'])
 def businesses():
     auth_header = request.headers.get('Authorization')
     access_token = auth_header.split(" ")[1]
     if access_token:
-        email = user.decode_token(access_token)
+        email = User.decode_token(access_token)
+        credentials = {user.email: user.username for user in users}
         if request.method == 'POST':
-            if email in USERS.keys():
+            if email in credentials.keys():
                 data = request.get_json()
-                businessId = len(bizneses) + 1
+                businessId = random.randint(1,10000)
                 businessName = data.get('businessName')
                 category = data.get('category')
                 location = data.get('location')
                 created_by = email
                 try:
                     bizneses.append(Business(businessId, businessName, category, location, created_by))
+                    businessNames = [biz.businessName for biz in bizneses]
                     businessIds = [biz.businessId for biz in bizneses]
                     response = {
                         'message': 'business created successfully',
-                        'business': businessIds
+                        'business': businessNames,
+                        'id': businessIds
                     }
                     return make_response(jsonify(response)), 201
                 except Exception as e:
@@ -112,25 +123,28 @@ def businesses():
                 'location': biz.location,
                 'created_by': biz.created_by
             }]
-        response = { 'business': obj}
+        response = {'business': obj}
         return make_response(jsonify(response)), 200
     response = {'message': 'Login in to continue'}
     return make_response(jsonify(response)), 401
+
 
 @v1.route('/businesses/<int:bizid>', methods=['GET', 'PUT', 'DELETE'])
 def businesses_manipulation(bizid):
     auth_header = request.headers.get('Authorization')
     access_token = auth_header.split(" ")[1]
     if access_token:
-        email = user.decode_token(access_token)
-        if email in USERS.keys():
+        email = User.decode_token(access_token)
+        credentials = {user.email: user.username for user in users}
+        if email in credentials.keys():
             businessIds = [biz.businessId for biz in bizneses]
             if bizid not in businessIds:
                 abort(404)
             if request.method == "DELETE":
                 for biz in bizneses:
                     if biz.businessId == bizid and biz.created_by == email:
-                        del bizneses[bizid-1]
+                        idx = bizneses.index(biz)
+                        del bizneses[idx]
                         response = {"message": "business {} deleted".format(bizid)}
                         return make_response(jsonify(response)), 200
             elif request.method == 'PUT':
@@ -140,8 +154,9 @@ def businesses_manipulation(bizid):
                         businessName = data.get('businessName')
                         category = data.get('category')
                         location = data.get('location')
-                        bizneses[bizid-1] = (Business(bizid, businessName, category, location, email))
-                        update = bizneses[bizid-1]
+                        idx = bizneses.index(biz)
+                        bizneses[idx] = (Business(bizid, businessName, category, location, email))
+                        update = bizneses[idx]
                         obj = { 
                             'id': update.businessId,
                             'name': update.businessName,
@@ -168,34 +183,36 @@ def businesses_manipulation(bizid):
         response = {'message': 'Login in to continue'}
         return make_response(jsonify(response)), 401
 
+
 @v1.route('/businesses/<int:bizid>/reviews', methods=['POST', 'GET'])
 def reviews(bizid):
     auth_header = request.headers.get('Authorization')
     access_token = auth_header.split(" ")[1]
     if access_token:
-        email = user.decode_token(access_token)
-        if request.method == 'POST':
-            if email in USERS.keys():    
+        email = User.decode_token(access_token)
+        credentials = {user.email: user.username for user in users}
+        if email in credentials.keys():
+            if request.method == 'POST':    
                 data = request.get_json()
                 review = data.get('name')
-                print(review)
                 try:
                     for biz in bizneses:
                         if biz.businessId == bizid and biz.created_by != email:
-                            biz.add_review(review)
-                            revs = bizneses[bizid-1]
+                            biz.reviews.append(review)
+                            idx = bizneses.index(biz)
+                            obj = bizneses[idx]
                     response = {
                         'message': 'review created successfully',
-                        'reviews': revs.reviews
+                        'reviews': obj.reviews
                     }
                     return make_response(jsonify(response)), 201
                 except Exception as e:
                     response = {'message': str(e)}
                     return make_response(jsonify(response)), 403
-        for biz in bizneses:
-            if biz.businessId == bizid:
-                obj = biz.reviews
-        response = {'reviews': obj}
-        return make_response(jsonify(response)), 200
+            for biz in bizneses:
+                if biz.businessId == bizid:
+                    obj = biz.reviews
+            response = {'reviews': obj}
+            return make_response(jsonify(response)), 200
 
 
