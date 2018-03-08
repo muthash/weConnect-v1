@@ -4,8 +4,4 @@ omit =
     'instance/*',
     '**/__init__.py',
     '**/__pycache__'
-    '**/home/*'
-    '**/travis/*'
-    '**/virtualenv/*'
-    '**/python3.6.2/*'
-    '**/lib/*'
+    '/home/*'
