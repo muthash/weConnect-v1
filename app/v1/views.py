@@ -65,6 +65,8 @@ def login():
                 return make_response(jsonify(response)), 500
         response = {'message': 'User does not exist. Proceed to register'}
         return jsonify(response), 401
+    response = {'message': 'Invalid HTTP request. Make a Post request'}
+    return jsonify(response), 403
 
 
 @v1.route('/reset-password', methods=['POST'])
@@ -107,18 +109,23 @@ def businesses():
                 location = data.get('location')
                 created_by = email
                 try:
-                    bizneses.append(Business(businessId, businessName, category, location, created_by))
-                    businessNames = [biz.businessName for biz in bizneses]
-                    businessIds = [biz.businessId for biz in bizneses]
-                    response = {
-                        'message': 'business created successfully',
-                        'business': businessNames,
-                        'id': businessIds
-                    }
-                    return make_response(jsonify(response)), 201
+                    if val.check_name(businessName):
+                        bizneses.append(Business(businessId, businessName, category, location, created_by))
+                        businessNames = [biz.businessName for biz in bizneses]
+                        businessIds = [biz.businessId for biz in bizneses]
+                        response = {
+                            'message': 'business created successfully',
+                            'business': businessNames,
+                            'id': businessIds
+                        }
+                        return make_response(jsonify(response)), 201
+                    response = {'message': 'Invalid business name input'}
+                    return make_response(jsonify(response)), 401
                 except Exception as e:
                     response = {'message': str(e)}
                     return make_response(jsonify(response)), 401
+            response = {'message': 'Register to continue'}
+            return make_response(jsonify(response)), 401
         for biz in bizneses:
             obj = [{ 
                 'id': biz.businessId,
@@ -159,17 +166,20 @@ def businesses_manipulation(bizid):
                         category = data.get('category')
                         location = data.get('location')
                         idx = bizneses.index(biz)
-                        bizneses[idx] = (Business(bizid, businessName, category, location, email))
-                        update = bizneses[idx]
-                        obj = { 
-                            'id': update.businessId,
-                            'name': update.businessName,
-                            'category': update.category,
-                            'location': update.location,
-                            'created_by': update.created_by
-                        }
-                        response = {'business': obj}
-                        return make_response(jsonify(response)), 200
+                        if val.check_name(businessName):
+                            bizneses[idx] = (Business(bizid, businessName, category, location, email))
+                            update = bizneses[idx]
+                            obj = { 
+                                'id': update.businessId,
+                                'name': update.businessName,
+                                'category': update.category,
+                                'location': update.location,
+                                'created_by': update.created_by
+                            }
+                            response = {'business': obj}
+                            return make_response(jsonify(response)), 200
+                        response = {'message': 'Invalid business name input'}
+                        return make_response(jsonify(response)), 401
                     response = {'message': 'Forbidden'}
                     return make_response(jsonify(response)), 403
             else:
@@ -184,8 +194,10 @@ def businesses_manipulation(bizid):
                         }
                 response = {'business': obj}
                 return make_response(jsonify(response)), 200
-        response = {'message': 'Login in to continue'}
+        response = {'message': 'Register to continue'}
         return make_response(jsonify(response)), 401
+    response = {'message': 'Login in to continue'}
+    return make_response(jsonify(response)), 401
 
 
 @v1.route('/businesses/<int:bizid>/reviews', methods=['POST', 'GET'])
@@ -199,24 +211,31 @@ def reviews(bizid):
             if request.method == 'POST':    
                 data = request.get_json()
                 review = data.get('name')
-                try:
-                    for biz in bizneses:
-                        if biz.businessId == bizid and biz.created_by != email:
-                            biz.reviews.append(review)
-                            idx = bizneses.index(biz)
-                            obj = bizneses[idx]
-                    response = {
-                        'message': 'review created successfully',
-                        'reviews': obj.reviews
-                    }
-                    return make_response(jsonify(response)), 201
-                except Exception as e:
-                    response = {'message': str(e)}
-                    return make_response(jsonify(response)), 403
+                if val.check_name(review):
+                    try:
+                        for biz in bizneses:
+                            if biz.businessId == bizid and biz.created_by != email:
+                                biz.reviews.append(review)
+                                idx = bizneses.index(biz)
+                                obj = bizneses[idx]
+                        response = {
+                            'message': 'review created successfully',
+                            'reviews': obj.reviews
+                        }
+                        return make_response(jsonify(response)), 201
+                    except Exception as e:
+                        response = {'message': str(e)}
+                        return make_response(jsonify(response)), 403
+                response = {'message': 'Invalid review name input'}
+                return make_response(jsonify(response)), 401
             for biz in bizneses:
                 if biz.businessId == bizid:
                     obj = biz.reviews
             response = {'reviews': obj}
             return make_response(jsonify(response)), 200
+        response = {'message': 'Register to continue'}
+        return make_response(jsonify(response)), 401
+    response = {'message': 'Login to continue'}
+    return make_response(jsonify(response)), 401
 
 
