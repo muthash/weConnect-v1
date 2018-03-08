@@ -143,3 +143,59 @@ class AuthTestCase(unittest.TestCase):
             headers={'Authorization': 'Bearer ' + access_token}
         )
         self.assertEqual(res3.status_code, 404)
+
+    def test_invalid_business_name(self):
+        """Test API can validate business name."""
+        invalid_business = {
+            'businessName': '       ',
+            'category': 'Lighting',
+            'location': 'Nairobi'
+        }
+        self.register_user()
+        result = self.login_user()
+        access_token = json.loads(result.data.decode())['access_token']
+        res = self.client().post(
+            '/api/v1/businesses',
+            headers={'Content-Type': 'application/json',
+                     'Authorization': 'Bearer ' + access_token},
+            data=json.dumps(invalid_business)
+        )
+        result = json.loads(res.data.decode())
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(result['message'], "Invalid business name input")
+
+    def test_invalid_access_token(self):
+        """Test API can check for a valid access token"""
+        valid_business = {
+            'businessName': 'TRM',
+            'category': 'Lighting',
+            'location': 'Nairobi'
+        }
+        access_token = "dgeyfeyfye.hbyeye.hbeygeded"
+        res = self.client().post(
+            '/api/v1/businesses',
+            headers={'Content-Type': 'application/json',
+                     'Authorization': 'Bearer ' + access_token},
+            data=json.dumps(valid_business)
+        )
+        result = json.loads(res.data.decode())
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(result['message'], "Register to continue")
+
+    def test_empty_access_token(self):
+        """Test API can check for an empty access token"""
+        valid_business = {
+            'businessName': 'TRM',
+            'category': 'Lighting',
+            'location': 'Nairobi'
+        }
+        access_token = ""
+        res = self.client().post(
+            '/api/v1/businesses',
+            headers={'Content-Type': 'application/json',
+                     'Authorization': 'Bearer ' + access_token},
+            data=json.dumps(valid_business)
+        )
+        result = json.loads(res.data.decode())
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(result['message'], "Login in to continue")
