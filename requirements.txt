@@ -8,6 +8,7 @@ coverage==4.5.1
 Flask==0.12.2
 Flask-API==1.0
 Flask-Bcrypt==0.7.1
+gunicorn==19.7.1
 isort==4.3.4
 itsdangerous==0.24
 Jinja2==2.10
