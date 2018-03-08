@@ -33,6 +33,10 @@ def register():
                     return make_response(response)
             response = {'message': 'User already exists. Please login'}
             return jsonify(response), 202
+        response = {'message': 'Invalid Email'}
+        return jsonify(response), 403
+    response = {'message': 'Invalid HTTP request. Make a Post request'}
+    return jsonify(response), 403
 
 
 @v1.route('/login', methods=['GET', 'POST'])
