@@ -62,9 +62,9 @@ on your browser open up [http://127.0.0.1:5000/api/v1/](http://127.0.0.1:5000/ap
 | GET /api/v1/businesses  | Retrieves all businesses |
 | PUT /api/v1/businesses/<businessId> | Updates a business profile |
 | DELETE /api/v1/businesses/<businessId> | Remove a business |
-| GET /api/v1/businesses/<businessId> | Get a business |
-| POST /api/businesses/<businessId>/reviews | Add a review for a business |
-| GET /api/businesses/<businessId>/reviews | Get all reviews for a business |
+| GET /api/v1/businesses/'businessId | Get a business |
+| POST /api/businesses/'<businessId>'/reviews | Add a review for a business |
+| GET /api/businesses/'<businessId>'/reviews | Get all reviews for a business |
 
 ### Testing using postman or curl 
 
@@ -78,13 +78,13 @@ make sure to register and login first to get the authorization token.
 Copy the token and paste it into the header section, creating an Authorization header. Don't forget to put the word Bearer before the token with a space separating them like this:
 
 ```Bearer eyJ0eXATQsImV4cCI6ViIjo1fQ.8ju7doEn6Q8VJ6WXAnBHKlyn8KCkMr....```
-## Test /api/v1/register/
+### Test /api/v1/register/
     
     curl -H "Accept: application/json"\-H "Content-type: application/json" -X POST \
 	-d '{"email": "test@test.com", "password": "test_password"}' \
 	http://127.0.0.1:5000/api/v1/register/
 
-## TEST /api/auth/login/
+### Test /api/auth/login/
     
     curl -H "Accept: application/json" \
 	-H "Content-type: application/json" -X POST \
