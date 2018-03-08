@@ -25,7 +25,7 @@ COV.start()
 @app.cli.command()
 def test():
     """Runs the unit tests without test coverage."""
-    tests = unittest.TestLoader().discover('app/tests', pattern='test*.py')
+    tests = unittest.TestLoader().discover('tests', pattern='test*.py')
     result = unittest.TextTestRunner(verbosity=2).run(tests)
     if result.wasSuccessful():
         COV.stop()
