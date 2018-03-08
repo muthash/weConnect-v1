@@ -84,3 +84,25 @@ class AuthTestCase(unittest.TestCase):
         login_res =  self.login_user("reset@test.com", "test12345")
         result = json.loads(login_res.data.decode())
         self.assertEqual(login_res.status_code, 200)
+    
+    def test_invalid_email_input(self):
+        """Test invalid email input"""
+        res = self.register_user("inco rect@test.com", "stephen", "test1234")
+        result = json.loads(res.data.decode())
+        self.assertEqual(result['message'], "Invalid Email")
+        self.assertEqual(res.status_code, 403)
+
+    def test_invalid_HTTP_request(self):
+        """Test when user makes an invalid http request"""
+        res = self.client().get(
+            '/api/v1/register',
+            headers={'Content-Type': 'application/json'})
+        result = json.loads(res.data.decode())
+        self.assertEqual(result['message'], "Invalid HTTP request. Make a Post request")
+        self.assertEqual(res.status_code, 403)
+        res_login = self.client().get(
+            '/api/v1/login',
+            headers={'Content-Type': 'application/json'})
+        result = json.loads(res_login.data.decode())
+        self.assertEqual(result['message'], "Invalid HTTP request. Make a Post request")
+        self.assertEqual(res.status_code, 403)
