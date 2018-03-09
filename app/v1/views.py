@@ -79,10 +79,11 @@ def reset_password():
         credentials = {user.email: user.username for user in users}
         if email in credentials.keys():
             data = request.get_json()
-            new_pass = Bcrypt().generate_password_hash(data.get('new_password')).decode()
+            new_pass = Bcrypt().generate_password_hash(
+                                data.get('new_password')).decode()
             try:
                 for user in users:
-                    if user.email == email: 
+                    if user.email == email:
                         user.password = new_pass
                         response = {'message': 'password_reset successfull'}
                 return make_response(jsonify(response)), 201
@@ -103,14 +104,16 @@ def businesses():
         if request.method == 'POST':
             if email in credentials.keys():
                 data = request.get_json()
-                businessId = random.randint(1,10000)
+                businessId = random.randint(1, 10000)
                 businessName = data.get('businessName')
                 category = data.get('category')
                 location = data.get('location')
                 created_by = email
                 try:
                     if val.check_name(businessName):
-                        bizneses.append(Business(businessId, businessName, category, location, created_by))
+                        bizneses.append(Business(businessId, businessName,
+                                                 category, location,
+                                                 created_by))
                         businessNames = [biz.businessName for biz in bizneses]
                         businessIds = [biz.businessId for biz in bizneses]
                         response = {
@@ -127,7 +130,7 @@ def businesses():
             response = {'message': 'Register to continue'}
             return make_response(jsonify(response)), 401
         for biz in bizneses:
-            obj = [{ 
+            obj = [{
                 'id': biz.businessId,
                 'name': biz.businessName,
                 'categoty': biz.category,
@@ -156,7 +159,8 @@ def businesses_manipulation(bizid):
                     if biz.businessId == bizid and biz.created_by == email:
                         idx = bizneses.index(biz)
                         del bizneses[idx]
-                        response = {"message": "business {} deleted".format(bizid)}
+                        response = {"message": "business {} " +
+                                    "deleted".format(bizid)}
                         return make_response(jsonify(response)), 200
             elif request.method == 'PUT':
                 for biz in bizneses:
@@ -167,9 +171,10 @@ def businesses_manipulation(bizid):
                         location = data.get('location')
                         idx = bizneses.index(biz)
                         if val.check_name(businessName):
-                            bizneses[idx] = (Business(bizid, businessName, category, location, email))
+                            bizneses[idx] = (Business(bizid, businessName,
+                                             category, location, email))
                             update = bizneses[idx]
-                            obj = { 
+                            obj = {
                                 'id': update.businessId,
                                 'name': update.businessName,
                                 'category': update.category,
@@ -185,7 +190,7 @@ def businesses_manipulation(bizid):
             else:
                 for biz in bizneses:
                     if biz.businessId == bizid:
-                        obj = { 
+                        obj = {
                             'id': biz.businessId,
                             'name': biz.businessName,
                             'category': biz.category,
@@ -208,13 +213,14 @@ def reviews(bizid):
         email = User.decode_token(access_token)
         credentials = {user.email: user.username for user in users}
         if email in credentials.keys():
-            if request.method == 'POST':    
+            if request.method == 'POST':
                 data = request.get_json()
                 review = data.get('name')
                 if val.check_name(review):
                     try:
                         for biz in bizneses:
-                            if biz.businessId == bizid and biz.created_by != email:
+                            if(biz.businessId == bizid and
+                               biz.created_by != email):
                                 biz.reviews.append(review)
                                 idx = bizneses.index(biz)
                                 obj = bizneses[idx]
@@ -237,5 +243,3 @@ def reviews(bizid):
         return make_response(jsonify(response)), 401
     response = {'message': 'Login to continue'}
     return make_response(jsonify(response)), 401
-
-

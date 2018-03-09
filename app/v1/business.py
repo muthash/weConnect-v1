@@ -1,7 +1,9 @@
 from flask import Flask
 
+
 class Business():
-    def __init__(self, businessId, businessName, category, location, created_by):
+    def __init__(self, businessId, businessName, category, location,
+                 created_by):
         self.businessId = businessId
         self.businessName = businessName
         self.category = category
@@ -14,6 +16,5 @@ class Business():
                     'businessName': self.businessName,
                     'category': self.category,
                     'location': self.location,
-                    'created_by': self.created_by 
-        }
+                    'created_by': self.created_by}
         return business

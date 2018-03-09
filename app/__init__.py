@@ -10,7 +10,7 @@ from instance.config import app_config
 
 
 def create_app(config_name):
-    """Function wraps the creation of a new Flask object, and returns it after it's 
+    """Function wraps the creation of a new Flask object, and returns it after it's
         loaded up with configuration settings
     """
     app = FlaskAPI(__name__, instance_relative_config=True)
