@@ -21,9 +21,11 @@ class AuthTestCase(unittest.TestCase):
             'location': 'Nakuru'
         }
 
-    def register_user(self, email="business@test.com", username="stephen", password="test1234"):
+    def register_user(self, email="business@test.com", username="stephen",
+                      password="test1234"):
         """This helper method helps register a test user."""
-        user_data = {'email': email, 'username': username, 'password': password}
+        user_data = {'email': email, 'username': username,
+                     'password': password}
         return self.client().post(
                 '/api/v1/register',
                 headers={'Content-Type': 'application/json'},
@@ -39,7 +41,8 @@ class AuthTestCase(unittest.TestCase):
                 data=json.dumps(user_data)
                )
 
-    def register_business(self, Name="KTDA", category="Farming", location="Narok"):
+    def register_business(self, Name="KTDA", category="Farming",
+                          location="Narok"):
         """This helper method helps register a test business"""
         self.register_user()
         result = self.login_user()
