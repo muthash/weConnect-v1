@@ -159,8 +159,8 @@ def businesses_manipulation(bizid):
                     if biz.businessId == bizid and biz.created_by == email:
                         idx = bizneses.index(biz)
                         del bizneses[idx]
-                        response = {"message": "business {} " +
-                                    "deleted".format(bizid)}
+                        response = {"message": "business {} deleted".
+                                    format(bizid)}
                         return make_response(jsonify(response)), 200
             elif request.method == 'PUT':
                 for biz in bizneses:
