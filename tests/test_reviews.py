@@ -92,7 +92,7 @@ class AuthTestCase(unittest.TestCase):
 
     def test_invalid_review_name(self):
         """Test the API can validate invalid input"""
-        invalid_review = {'name': '    '}
+        invalid_review = {'name': '   '}
         self.register_user("reviewer5@test.com", "stephen", "test1234")
         res = self.login_user("reviewer5@test.com", "test1234")
         access_token = json.loads(res.data.decode())['access_token']
@@ -119,3 +119,33 @@ class AuthTestCase(unittest.TestCase):
         biz = json.loads(res3.data.decode())['reviews']
         self.assertTrue(biz)
         self.assertEqual(res.status_code, 200)
+    
+    def test_empty_access_token(self):
+        """Test API can check for an empty access token"""
+        review = {'name': 'Invalid Access token'}
+        self.register_user("reviewer5@test.com", "stephen", "test1234")
+        res = self.login_user("reviewer5@test.com", "test1234")
+        access_token = json.loads(res.data.decode())['access_token']
+        res2 = self.client().post(
+            '/api/v1/businesses',
+            headers={'Content-Type': 'application/json',
+                     'Authorization': 'Bearer ' + access_token},
+            data=json.dumps(self.business)
+        )
+        bizIds = json.loads(res2.data.decode())['id']
+        access_token = ""
+        res3 = self.client().post(
+            '/api/v1/businesses/{}/reviews'.format(bizIds[0]),
+            headers={'Content-Type': 'application/json',
+                     'Authorization': 'Bearer ' + access_token},
+            data=json.dumps(review)
+        )
+        res3 = self.client().get(
+            '/api/v1/businesses/{}/reviews'.format(bizIds[0]),
+            headers={'Authorization': 'Bearer ' + access_token}
+        )
+        result = json.loads(res3.data.decode())
+        self.assertEqual(res3.status_code, 401)
+        self.assertEqual(result['message'], "Login to continue")
+
+    
