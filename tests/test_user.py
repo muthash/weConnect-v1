@@ -89,7 +89,7 @@ class AuthTestCase(unittest.TestCase):
         login_res = self.login_user("reset@test.com", "test12345")
         result = json.loads(login_res.data.decode())
         self.assertEqual(login_res.status_code, 200)
-    
+
     def test_invalid_email_input(self):
         """Test invalid email input"""
         res = self.register_user("inco rect@test.com", "stephen", "test1234")

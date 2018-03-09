@@ -16,10 +16,12 @@ class AuthTestCase(unittest.TestCase):
             'category': 'Gumba',
             'location': 'Nairobi'
         }
-    
-    def register_user(self, email="reviewer@test.com", username="stephen", password="test1234"):
+
+    def register_user(self, email="reviewer@test.com", username="stephen",
+                      password="test1234"):
         """This helper method helps register a test user."""
-        user_data = {'email': email, 'username': username, 'password': password}
+        user_data = {'email': email, 'username': username,
+                     'password': password}
         return self.client().post(
                 '/api/v1/register',
                 headers={'Content-Type': 'application/json'},
@@ -47,7 +49,7 @@ class AuthTestCase(unittest.TestCase):
             data=json.dumps(self.business)
         )
         bizIds = json.loads(res2.data.decode())['id']
-        
+
         self.register_user("reviewer2@test.com", "stephen", "test1234")
         res4 = self.login_user("reviewer2@test.com", "test1234")
         access_token = json.loads(res4.data.decode())['access_token']
@@ -119,7 +121,7 @@ class AuthTestCase(unittest.TestCase):
         biz = json.loads(res3.data.decode())['reviews']
         self.assertTrue(biz)
         self.assertEqual(res.status_code, 200)
-    
+
     def test_empty_access_token(self):
         """Test API can check for an empty access token"""
         review = {'name': 'Invalid Access token'}
@@ -147,5 +149,3 @@ class AuthTestCase(unittest.TestCase):
         result = json.loads(res3.data.decode())
         self.assertEqual(res3.status_code, 401)
         self.assertEqual(result['message'], "Login to continue")
-
-    
