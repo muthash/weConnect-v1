@@ -11,9 +11,11 @@ class AuthTestCase(unittest.TestCase):
         self.app = create_app(config_name="testing")
         self.client = self.app.test_client
 
-    def register_user(self, email="user@test.com", username="stephen", password="test1234"):
+    def register_user(self, email="user@test.com", username="stephen",
+                      password="test1234"):
         """This helper method helps register a test user."""
-        user_data = {'email': email, 'username': username, 'password': password}
+        user_data = {'email': email, 'username': username,
+                     'password': password}
         return self.client().post(
                 '/api/v1/register',
                 headers={'Content-Type': 'application/json'},
@@ -39,9 +41,11 @@ class AuthTestCase(unittest.TestCase):
     def test_already_registered_user(self):
         """Test that a user cannot be registered twice."""
         self.register_user("steve@test.com", "stephen", "test1234")
-        second_res = self.register_user("steve@test.com", "stephen", "test1234")
+        second_res = self.register_user("steve@test.com",
+                                        "stephen", "test1234")
         result = json.loads(second_res.data.decode())
-        self.assertEqual(result['message'], "User already exists. Please login")
+        self.assertEqual(result['message'],
+                         "User already exists. Please login")
         self.assertEqual(second_res.status_code, 202)
 
     def test_user_login(self):
@@ -57,7 +61,8 @@ class AuthTestCase(unittest.TestCase):
         """Test unregistered user cannot login."""
         login_res = self.login_user('muthama@gmail.com', 'mypassword')
         result = json.loads(login_res.data.decode())
-        self.assertEqual(result['message'], "User does not exist. Proceed to register")
+        self.assertEqual(result['message'], "User does not exist. " +
+                         "Proceed to register")
         self.assertEqual(login_res.status_code, 401)
 
     def test_incorrect_password_login(self):
@@ -70,7 +75,7 @@ class AuthTestCase(unittest.TestCase):
 
     def test_password_reset(self):
         self.register_user("reset@test.com", "stephen", "test1234")
-        login_res =  self.login_user("reset@test.com", "test1234")
+        login_res = self.login_user("reset@test.com", "test1234")
         access_token = json.loads(login_res.data.decode())['access_token']
         new_password = {'new_password': 'test12345'}
         reset_res = self.client().post(
@@ -81,7 +86,7 @@ class AuthTestCase(unittest.TestCase):
         result = json.loads(reset_res.data.decode())
         self.assertEqual(result['message'], "password_reset successfull")
         self.assertEqual(reset_res.status_code, 201)
-        login_res =  self.login_user("reset@test.com", "test12345")
+        login_res = self.login_user("reset@test.com", "test12345")
         result = json.loads(login_res.data.decode())
         self.assertEqual(login_res.status_code, 200)
     
@@ -98,11 +103,13 @@ class AuthTestCase(unittest.TestCase):
             '/api/v1/register',
             headers={'Content-Type': 'application/json'})
         result = json.loads(res.data.decode())
-        self.assertEqual(result['message'], "Invalid HTTP request. Make a Post request")
+        self.assertEqual(result['message'], "Invalid HTTP request. " +
+                         "Make a Post request")
         self.assertEqual(res.status_code, 403)
         res_login = self.client().get(
             '/api/v1/login',
             headers={'Content-Type': 'application/json'})
         result = json.loads(res_login.data.decode())
-        self.assertEqual(result['message'], "Invalid HTTP request. Make a Post request")
+        self.assertEqual(result['message'], "Invalid HTTP request. " +
+                         "Make a Post request")
         self.assertEqual(res.status_code, 403)
