@@ -1,5 +1,3 @@
-__
-
 [![Build Status](https://travis-ci.org/muthash/WeConnect.svg?branch=challenge2)](https://travis-ci.org/muthash/WeConnect)
 [![Coverage Status](https://coveralls.io/repos/github/muthash/WeConnect/badge.svg?branch=challenge2)](https://coveralls.io/github/muthash/WeConnect?branch=challenge2)
 ___
