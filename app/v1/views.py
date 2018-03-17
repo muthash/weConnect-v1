@@ -129,15 +129,16 @@ def businesses():
                     return make_response(jsonify(response)), 401
             response = {'message': 'Register to continue'}
             return make_response(jsonify(response)), 401
+        obj = []
         for biz in bizneses:
-            obj = [{
+            obj.append({
                 'id': biz.businessId,
                 'name': biz.businessName,
                 'categoty': biz.category,
                 'location': biz.location,
                 'created_by': biz.created_by
-            }]
-        response = {'business': obj}
+            })
+            response = {'business': obj}
         return make_response(jsonify(response)), 200
     response = {'message': 'Login in to continue'}
     return make_response(jsonify(response)), 401
@@ -213,6 +214,9 @@ def reviews(bizid):
         email = User.decode_token(access_token)
         credentials = {user.email: user.username for user in users}
         if email in credentials.keys():
+            businessIds = [biz.businessId for biz in bizneses]
+            if bizid not in businessIds:
+                abort(404)
             if request.method == 'POST':
                 data = request.get_json()
                 review = data.get('name')
