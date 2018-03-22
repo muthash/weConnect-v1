@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/muthash/WeConnect.svg?branch=challenge2)](https://travis-ci.org/muthash/WeConnect)
-[![Coverage Status](https://coveralls.io/repos/github/muthash/WeConnect/badge.svg?branch=challenge2)](https://coveralls.io/github/muthash/WeConnect?branch=challenge2)
+[![Build Status](https://travis-ci.org/muthash/WeConnect-Nonpersistent.svg?branch=master)](https://travis-ci.org/muthash/WeConnect-Nonpersistent)
+[![Coverage Status](https://coveralls.io/repos/github/muthash/WeConnect-Nonpersistent/badge.svg?branch=master)](https://coveralls.io/github/muthash/WeConnect-Nonpersistent?branch=master)
 ___
 
 ## WeConnect
