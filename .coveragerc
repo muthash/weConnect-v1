@@ -1,0 +1,7 @@
+[report]
+omit =
+    'app/tests/*',
+    'instance/*',
+    '**/__init__.py',
+    '**/__pycache__'
+    '/home/*'
