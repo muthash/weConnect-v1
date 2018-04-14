@@ -10,6 +10,7 @@ from app.baseview import BaseView
 
 auth = Blueprint('auth', __name__, url_prefix='/api/v1')
 users = []
+blacklist = set()
 
 
 class RegisterUser(BaseView):
@@ -61,5 +62,17 @@ class LoginUser(BaseView):
         return self.validate_json()
 
 
+class LogoutUser(MethodView):
+    """Method to logout a user"""
+    @jwt_required
+    def post(self):
+        """Endpoint to logout a user"""
+        jti = get_raw_jwt()['jti']
+        blacklist.add(jti)
+        response = {'message': 'Successfully logged out'}
+        return jsonify(response), 200
+
+
 auth.add_url_rule('/register', view_func=RegisterUser.as_view('register'))
 auth.add_url_rule('/login', view_func=LoginUser.as_view('login'))
+auth.add_url_rule('/logout', view_func=LogoutUser.as_view('logout'))
