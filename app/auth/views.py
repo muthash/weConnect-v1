@@ -38,4 +38,28 @@ class RegisterUser(BaseView):
         return self.validate_json()
 
 
+class LoginUser(BaseView):
+    """Method to Login a user"""
+    def post(self):
+        """Endpoint to save the data to the database"""
+        if not self.validate_json():
+            data = request.get_json()
+            email = data.get('email')
+            password = data.get('password')
+            user_data = {'email': email, 'password': password}
+            if not self.validate_null(**user_data):
+                user_ = [user for user in users if email == user.email]
+                if user_:
+                    user = user_[0]
+                    if Bcrypt().check_password_hash(user.password, password):
+                        return self.generate_token(user.email, user.username)
+                    response = {'message': 'Invalid email or password'}
+                    return jsonify(response), 401
+                response = {'message': 'Invalid email or password'}
+                return jsonify(response), 401
+            return self.validate_null(**user_data)
+        return self.validate_json()
+
+
 auth.add_url_rule('/register', view_func=RegisterUser.as_view('register'))
+auth.add_url_rule('/login', view_func=LoginUser.as_view('login'))
