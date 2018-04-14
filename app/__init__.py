@@ -42,7 +42,8 @@ def create_app(config_name):
     @app.errorhandler(500)
     def server_error(error):
         """Error handler for a server failure"""
-        return jsonify(dict(error='Database connection failed! Try Again')), 500
+        return jsonify(dict(error='The server encountered an internal error '+
+                                  'and was unable to complete your request')), 500
 
     @jwt.token_in_blacklist_loader
     def check_if_token_in_blacklist(decrypted_token):
