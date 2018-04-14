@@ -12,7 +12,7 @@ class Config(object):
     DEBUG = False
     CSRF_ENABLED = True
     SECRET_KEY = os.getenv('SECRET')
-
+    JWT_BLACKLIST_ENABLED = True
 
 class DevelopmentConfig(Config):
     """Configurations for Development"""
