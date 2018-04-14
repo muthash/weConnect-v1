@@ -52,3 +52,44 @@ class TestRegisterUser(BaseTestCase):
         result = json.loads(res.data.decode())
         self.assertEqual(result['error'], 'The HTTP request Method is not allowed')
         self.assertEqual(res.status_code, 405)
+
+class TestLoginUser(BaseTestCase):
+    """Test for Login User endpoint"""
+    def test_user_login(self):
+        """Test registered user can login"""
+        self.make_request('/api/v1/register', data=self.user_data)
+        res = self.make_request('/api/v1/login', data=self.login_data)
+        result = json.loads(res.data.decode())
+        self.assertEqual(result['message'], 'Login successfull. Welcome stephen')
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(result['access_token'])
+    
+    def test_unregistered_user_login(self):
+        """Test unregistered user cannot login"""
+        res = self.make_request('/api/v1/login', data=self.login_data)
+        result = json.loads(res.data.decode())
+        self.assertEqual(result['message'], "Invalid email or password")
+        self.assertEqual(res.status_code, 401)
+
+    def test_invalid_password_login(self):
+        """Test invalid password cannot login"""
+        self.make_request('/api/v1/register', data=self.user_data)
+        res = self.make_request('/api/v1/login', data=self.invalid_pass)
+        result = json.loads(res.data.decode())
+        self.assertEqual(result['message'], "Invalid email or password")
+        self.assertEqual(res.status_code, 401)
+
+    def test_valid_json_request(self):
+        """Test login request is json format"""
+        self.header = {}
+        res = self.make_request('/api/v1/login', data=self.login_data)
+        result = json.loads(res.data.decode())
+        self.assertEqual(result['message'], 'The Request should be JSON format')
+        self.assertEqual(res.status_code, 400)
+
+    def test_login_missing_field(self):
+        """Test user login with missing field"""
+        res = self.make_request('/api/v1/login', data=self.missing_pass)
+        result = json.loads(res.data.decode())
+        self.assertEqual(result['message'], ['Please enter your password'])
+        self.assertEqual(res.status_code, 400)
