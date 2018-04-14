@@ -40,3 +40,16 @@ class BaseView(MethodView):
             response = {'message': messages}
             return jsonify(response), 400
         return False
+
+    def generate_token(self, user, username, expires=datetime.timedelta(hours=1)):
+        """Return access token and response to user"""
+        response = {
+            'message': 'Login successfull. Welcome {}'.format(username),
+            'access_token': create_access_token(identity=user, expires_delta=expires)
+        }
+        return jsonify(response), 200
+
+    def remove_extra_spaces(self, user_input):
+        """Maximum number of spaces between words should be one"""
+        strip_text = user_input.strip()
+        return re.sub(r'\s+', ' ', strip_text)
