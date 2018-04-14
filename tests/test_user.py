@@ -93,3 +93,23 @@ class TestLoginUser(BaseTestCase):
         result = json.loads(res.data.decode())
         self.assertEqual(result['message'], ['Please enter your password'])
         self.assertEqual(res.status_code, 400)
+
+
+class TestLogoutUser(BaseTestCase):
+    """Test for Logout User endpoint"""
+    def test_logout_user(self):
+        """Test if logged in user can logout"""
+        self.get_login_token()
+        logout_res = self.client.post('/api/v1/logout', headers=self.header)
+        result = json.loads(logout_res.data.decode())
+        self.assertEqual(result['message'], "Successfully logged out")
+        self.assertEqual(logout_res.status_code, 200)
+
+    def test_already_logout_user(self):
+        """Test logout for aleady logged out user"""
+        self.get_login_token()
+        self.client.post('/api/v1/logout', headers=self.header)
+        logout_res = self.client.post('/api/v1/logout', headers=self.header)
+        result = json.loads(logout_res.data.decode())
+        self.assertEqual(result['msg'], "Token has been revoked")
+        self.assertEqual(logout_res.status_code, 401)
