@@ -34,6 +34,35 @@ class BusinessManipulation(BaseView):
             return self.validate_null(**data_)
         return self.validate_json()
 
+    @jwt_required
+    def put(self, business_id):
+        """update a single business"""
+        if not self.validate_json():
+            data = request.get_json()
+            name = data.get('name')
+            description = data.get('description')
+            category = data.get('category')
+            location = data.get('location')
+            current_user = get_jwt_identity()
+            data_ = dict(name=name, description=description, category=category, location=location)
+            if not self.validate_null(**data_):
+                business_ = [business for business in store if business_id == business.id]
+                if business_:
+                    business = business_[0]
+                    if current_user == business.created_by:
+                        data = self.remove_extra_spaces(**data_)
+                        index = store.index(business)
+                        del store[index]
+                        store.insert(index, business)
+                        response = {'message': 'Business updated successfully'}
+                        return jsonify(response), 200
+                    response = {'message': 'The operation is forbidden for this business'}
+                    return jsonify(response), 403
+                response = {'message': 'The business {} is not available'.format(business_id)}
+                return jsonify(response), 404
+            return self.validate_null(**data_)
+        return self.validate_json()
+
 
 business_view = BusinessManipulation.as_view('businesses')
 biz.add_url_rule('', defaults={'business_id':None}, view_func=business_view, methods=['GET',])
