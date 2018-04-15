@@ -28,7 +28,6 @@ class BusinessManipulation(BaseView):
                     data = self.remove_extra_spaces(**data_)
                     business = Business(**data, created_by=current_user)
                     store.append(business)
-                    print(store)
                     response = {'message': 'Business with name {} created'.format(name)}
                     return jsonify(response), 201
                 response = {'message': 'Please login to continue'}
@@ -96,7 +95,24 @@ class BusinessManipulation(BaseView):
             return self.validate_null(**data_)
         return self.validate_json()
 
-
+    @jwt_optional
+    def get(self, business_id):
+        """return a list of all businesses else a single business"""
+        if business_id is None:
+            business_ = [business.serialize() for business in store]
+            if business_:
+                response = {'message': 'The following businesss are registered',
+                            'businesses': business_}
+                return jsonify(response), 200
+            response = {'message': 'There are no businesses registered currently'}
+            return jsonify(response), 404
+        else:
+            business_ = [business.serialize() for business in store if business_id == business.id]
+            if business_:
+                response = {'businesses': business_,}
+                return jsonify(response), 200
+            response = {'message': 'The business {} is not available'.format(business_id)}
+            return jsonify(response), 404
 
 
 business_view = BusinessManipulation.as_view('businesses')
