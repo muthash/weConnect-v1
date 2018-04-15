@@ -113,3 +113,37 @@ class TestLogoutUser(BaseTestCase):
         result = json.loads(logout_res.data.decode())
         self.assertEqual(result['msg'], "Token has been revoked")
         self.assertEqual(logout_res.status_code, 401)
+
+
+class TestResetPassword(BaseTestCase):
+    """Test reset password user endpoint"""
+    def test_password_reset(self):
+        """Test password reset works as expected"""
+        self.make_request('/api/v1/register', data=self.user_data)
+        reset_res = self.make_request('/api/v1/reset-password', data=dict(email='user@test.com'))
+        result = json.loads(reset_res.data.decode())
+        self.assertEqual(result['message'], 'Password reset successfull'+
+                                            ' Check your email for your new password')
+        self.assertEqual(reset_res.status_code, 201)
+
+    def test_valid_json_request(self):
+        """Test reset password request is json format"""
+        self.header = {}
+        res = self.make_request('/api/v1/reset-password', data=dict(email='user@test.com'))
+        result = json.loads(res.data.decode())
+        self.assertEqual(result['message'], 'The Request should be JSON format')
+        self.assertEqual(res.status_code, 400)
+
+    def test_not_user_reset(self):
+        """Test reset password with a non existing account"""
+        reset_res = self.make_request('/api/v1/reset-password', data=dict(email='none@test.com'))
+        result = json.loads(reset_res.data.decode())
+        self.assertEqual(result['message'], "Email address not ragistered")
+        self.assertEqual(reset_res.status_code, 401)
+
+    def test_reset_null_email(self):
+        """Test reset password with a missing email address"""
+        reset_res = self.make_request('/api/v1/reset-password', data={})
+        result = json.loads(reset_res.data.decode())
+        self.assertEqual(result['message'], ['Please enter your email'])
+        self.assertEqual(reset_res.status_code, 400)
