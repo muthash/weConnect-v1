@@ -35,7 +35,7 @@ def create_app(config_name):
     @app.errorhandler(404)
     def not_found(error):
         """Error handler for not found page"""
-        return jsonify(dict(error='Resource not found')), 404
+        return jsonify(dict(error='The Resource is not available')), 404
 
     @app.errorhandler(405)
     def method_not_allowed(error):
