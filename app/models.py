@@ -19,7 +19,7 @@ class User():
 class Business():
     """contains the business model"""
     this_id = 0
-    def __init__(self, name, description, category, location, created_by):
+    def __init__(self, name, category, location, created_by):
         Business.this_id += 1
         self.id = Business.this_id
         self.name = name
