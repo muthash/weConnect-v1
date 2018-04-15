@@ -1,9 +1,12 @@
 import re
 import datetime
+import uuid
 from flask import request, jsonify
 from flask.views import MethodView
 from flask_jwt_extended import create_access_token
 from email_validator import validate_email, EmailNotValidError
+from flask_mail import Message
+from app import mail
 
 
 class BaseView(MethodView):
@@ -17,7 +20,7 @@ class BaseView(MethodView):
 
     def check_email(self, email):
         try:
-            validator_response = validate_email(email)
+            validator_response = validate_email(email, check_deliverability=False)
             email = validator_response["email"]
             return False
         except EmailNotValidError as error:
@@ -49,7 +52,23 @@ class BaseView(MethodView):
         }
         return jsonify(response), 200
 
+    def random_string(self, string_length=8):
+        """Return a random string of length string_length"""
+        random = str(uuid.uuid4())
+        random = random.replace("-", "")
+        return random[:string_length]
+
     def remove_extra_spaces(self, user_input):
         """Maximum number of spaces between words should be one"""
         strip_text = user_input.strip()
         return re.sub(r'\s+', ' ', strip_text)
+
+    def send_reset_password(self, email, password):
+        """Returns a random string of length string_length"""
+        message = Message(
+            subject='Weconnect Account Password Reset',
+            recipients=[email],
+            html='Your new password is: {}'.format(password) +
+                 '<br><a href="https://github.com/muthash" target="_blank">Click here to reset password</a>'
+        )
+        mail.send(message)
