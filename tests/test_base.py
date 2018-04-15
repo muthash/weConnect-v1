@@ -6,6 +6,7 @@ import unittest
 import json
 from app import create_app
 from app.auth.views import users
+from app.business.views import store
 
 
 class BaseTestCase(unittest.TestCase):
@@ -29,6 +30,8 @@ class BaseTestCase(unittest.TestCase):
         self.business_data = {'name': 'KTDA',
                               'description': 'This is my business',
                               'category': 'Farming', 'location': 'Narok'}
+        self.update_data = {'name':'ABCD', 'description':'This is updated', 
+                            'category':'Farming', 'location':'Narok'}
         self.review_data = {'review': 'KTDA services are the best',
                             'rating': 3}
         self.url = None
@@ -71,6 +74,7 @@ class BaseTestCase(unittest.TestCase):
     def tearDown(self):
         """teardown all initialized variables"""
         users.clear()
+        store.clear()
 
 
 if __name__ == "__main__":
