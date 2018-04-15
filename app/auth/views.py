@@ -94,8 +94,39 @@ class ResetPassword(BaseView):
         return self.validate_json()
 
 
+class ChangePassword(BaseView):
+    """Method to change a user password"""
+    @jwt_required
+    def put(self):
+        """Endpoint to change a user password"""
+        if not self.validate_json():
+            data = request.get_json()
+            old_pass = data.get('old_password')
+            new_pass = data.get('new_password')
+            current_user = get_jwt_identity()
+            jti = get_raw_jwt()['jti']
+            user_data = {'old_password': old_pass, 'new_password': new_pass}
+            if not self.validate_null(**user_data):
+                user_ = [user for user in users if current_user == user.email]
+                if user_:
+                    user = user_[0]
+                    if Bcrypt().check_password_hash(user.password, old_pass):
+                        user.update_password(new_pass)
+                        blacklist.add(jti)
+                        response = {'message': 'Password change successfull'+
+                                               ' Login to continue'}
+                        return jsonify(response), 201
+                    response = {'message': 'Enter correct initial password'+
+                                               ' or reset password'}
+                    return jsonify(response), 401
+                response = {'message': 'Please login to continue'}
+                return jsonify(response), 401
+            return self.validate_null(**user_data)
+        return self.validate_json()
+
+
 auth.add_url_rule('/register', view_func=RegisterUser.as_view('register'))
 auth.add_url_rule('/login', view_func=LoginUser.as_view('login'))
 auth.add_url_rule('/logout', view_func=LogoutUser.as_view('logout'))
 auth.add_url_rule('/reset-password', view_func=ResetPassword.as_view('reset-password'))
-# auth.add_url_rule('/change-password', view_func=ChangePassword.as_view('Change-password'))
+auth.add_url_rule('/change-password', view_func=ChangePassword.as_view('Change-password'))
