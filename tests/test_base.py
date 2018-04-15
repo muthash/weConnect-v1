@@ -27,13 +27,9 @@ class BaseTestCase(unittest.TestCase):
         self.passwords = {'old_password': "test1234", 'new_password': "newtestpass"}
         self.invalid_pass = {'old_password': "test123", 'new_password': "newpass"}
         self.null_pass = {'old_password': "    ", 'new_password': "newpass"}
-        self.business_data = {'name': 'KTDA',
-                              'description': 'This is my business',
-                              'category': 'Farming', 'location': 'Narok'}
-        self.update_data = {'name':'ABCD', 'description':'This is updated', 
-                            'category':'Farming', 'location':'Narok'}
-        self.review_data = {'review': 'KTDA services are the best',
-                            'rating': 3}
+        self.business_data = {'name': 'KTDA', 'category': 'Farming', 'location': 'Narok'}
+        self.update_data = {'name':'ABCD', 'category':'Farming', 'location':'Narok'}
+        self.review_data = {'review': 'KTDA services are the best'}
         self.url = None
 
     def make_request(self, url, method='post', **kwargs):
