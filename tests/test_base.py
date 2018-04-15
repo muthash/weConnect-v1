@@ -74,7 +74,6 @@ class BaseTestCase(unittest.TestCase):
     def tearDown(self):
         """teardown all initialized variables"""
         users.clear()
-        store.clear()
 
 
 if __name__ == "__main__":
