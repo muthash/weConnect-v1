@@ -9,6 +9,9 @@ class User():
         self.username = username
         self.password = Bcrypt().generate_password_hash(password).decode()
 
+    def update_password(self, password):
+        self.password = Bcrypt().generate_password_hash(password).decode()
+
     def __repr__(self):
         return 'user is {}'.format(self.email)
 
