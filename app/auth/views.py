@@ -82,9 +82,12 @@ class ResetPassword(BaseView):
                 user_ = [user for user in users if email == user.email]
                 if user_:
                     password = self.random_string()
-                    self.send_reset_password(email, password)
                     user = user_[0]
+                    index = users.index(user)
                     user.update_password(password)
+                    del users[index]
+                    users.insert(index, user)
+                    self.send_reset_password(email, password)
                     response = {'message': 'Password reset successfull'+
                                            ' Check your email for your new password'}
                     return jsonify(response), 201
@@ -112,6 +115,9 @@ class ChangePassword(BaseView):
                     user = user_[0]
                     if Bcrypt().check_password_hash(user.password, old_pass):
                         user.update_password(new_pass)
+                        index = users.index(user)
+                        del users[index]
+                        users.insert(index, user)
                         blacklist.add(jti)
                         response = {'message': 'Password change successfull'+
                                                ' Login to continue'}
