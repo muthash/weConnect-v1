@@ -53,16 +53,16 @@ class BaseTestCase(unittest.TestCase):
         self.header['Authorization'] = 'Bearer ' + result['access_token']
         return result
 
-    def register_business(self):
+    def register_business(self, data):
         """Register a test business"""
         self.get_login_token()
-        res = self.make_request('/api/v1/business', data=self.business_data)
+        res = self.make_request('/api/v1/businesses', data=data)
         result = json.loads(res.data.decode())
         return result
 
     def register_review(self):
         """Register a test review for the registered business"""
-        self.register_business()
+        self.register_business(self.business_data)
         res = self.make_request('/api/v1/business/1/reviews',
                                 data=self.review_data)
         result = json.loads(res.data.decode())
