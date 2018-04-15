@@ -17,17 +17,20 @@ class BaseTestCase(unittest.TestCase):
         self.header = {'Content-Type': 'application/json'}
         self.user_data = {'email': 'user@test.com', 'username': 'stephen',
                           'password': 'test1234'}
+        self.invalid_email = {'email': 'user', 'username': 'stephen',
+                              'password': 'test1234'}
         self.login_data = {'email': 'user@test.com', 'password': 'test1234'}
+        self.unregisterd = {'email': 'notuser@me.com', 'password': 'test1234'}
+        self.invalid_pass = {'email': 'user@test.com', 'password': 'test123'}
+        self.missing_pass = {'email': 'user@test.com'}
+        self.passwords = {'old_password': "test1234", 'new_password': "newtestpass"}
+        self.invalid_pass = {'old_password': "test123", 'new_password': "newpass"}
+        self.null_pass = {'old_password': "    ", 'new_password': "newpass"}
         self.business_data = {'name': 'KTDA',
                               'description': 'This is my business',
                               'category': 'Farming', 'location': 'Narok'}
         self.review_data = {'review': 'KTDA services are the best',
                             'rating': 3}
-        self.invalid_email = {'email': 'user', 'username': 'stephen',
-                          'password': 'test1234'}
-        self.unregisterd = {'email': 'notuser@me.com', 'password': 'test1234'}
-        self.invalid_pass = {'email': 'user@test.com', 'password': 'test123'}
-        self.missing_pass = {'email': 'user@test.com'}
         self.url = None
 
     def make_request(self, url, method='post', **kwargs):
