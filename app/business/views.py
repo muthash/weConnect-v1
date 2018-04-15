@@ -1,6 +1,7 @@
 """Contains views to register, login reset password and logout user"""
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity, jwt_optional
+from flask_bcrypt import Bcrypt
 from app.models import Business
 from app.baseview import BaseView
 from app.auth.views import users
@@ -27,6 +28,7 @@ class BusinessManipulation(BaseView):
                     data = self.remove_extra_spaces(**data_)
                     business = Business(**data, created_by=current_user)
                     store.append(business)
+                    print(store)
                     response = {'message': 'Business with name {} created'.format(name)}
                     return jsonify(response), 201
                 response = {'message': 'Please login to continue'}
@@ -62,6 +64,39 @@ class BusinessManipulation(BaseView):
                 return jsonify(response), 404
             return self.validate_null(**data_)
         return self.validate_json()
+
+    @jwt_required
+    def delete(self, business_id):
+        if not self.validate_json():
+            data = request.get_json()
+            password = data.get('password')
+            current_user = get_jwt_identity()
+            data_ = dict(password=password)
+            if not self.validate_null(**data_):
+                user_ = [user for user in users if current_user == user.email]
+                if user_:
+                    user = user_[0]
+                    if Bcrypt().check_password_hash(user.password, password):
+                        business_ = [business for business in store if business_id == business.id]
+                        if business_:
+                            business = business_[0]
+                            if current_user == business.created_by:
+                                index = store.index(business)
+                                del store[index]
+                                response = {'message': 'Business {} deleted'.format(business_id)}
+                                return jsonify(response), 200
+                            response = {'message': 'The operation is forbidden for this business'}
+                            return jsonify(response), 403
+                        response = {'message': 'The business {} is not available'.format(business_id)}
+                        return jsonify(response), 404
+                    response = {'message': 'Enter correct password to delete'}
+                    return jsonify(response), 401
+                response = {'message': 'Please login to continue'}
+                return jsonify(response), 401
+            return self.validate_null(**data_)
+        return self.validate_json()
+
+
 
 
 business_view = BusinessManipulation.as_view('businesses')
