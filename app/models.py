@@ -33,7 +33,8 @@ class Business():
                 'business_name': self.name,
                 'category': self.category,
                 'location': self.location,
-                'created_by': self.created_by}
+                'reviews': self.reviews
+                }
 
     def __repr__(self):
-        return 'business is {}'.format(self.name)
+        return 'business is {}'.format(self.id)
