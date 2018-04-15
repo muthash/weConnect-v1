@@ -58,10 +58,14 @@ class BaseView(MethodView):
         random = random.replace("-", "")
         return random[:string_length]
 
-    def remove_extra_spaces(self, user_input):
+    def remove_extra_spaces(self, **kwargs):
         """Maximum number of spaces between words should be one"""
-        strip_text = user_input.strip()
-        return re.sub(r'\s+', ' ', strip_text)
+        norm = {}
+        for key in kwargs:
+            strip_text = kwargs[key].strip()
+            norm_string = re.sub(r'\s+', ' ', strip_text)
+            norm[key] = norm_string
+        return norm
 
     def send_reset_password(self, email, password):
         """Returns a random string of length string_length"""
