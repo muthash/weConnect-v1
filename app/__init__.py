@@ -25,7 +25,7 @@ def create_app(config_name):
 
     from app.auth.views import auth
     from app.auth.views import blacklist
-    # from app.business.views import biz, rev
+    from app.business.views import biz
 
     @app.errorhandler(400)
     def bad_request(error):
@@ -55,7 +55,7 @@ def create_app(config_name):
         return jti in blacklist
 
     app.register_blueprint(auth)
-    # app.register_blueprint(biz)
+    app.register_blueprint(biz)
     # app.register_blueprint(rev)
 
     return app
