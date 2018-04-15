@@ -18,21 +18,22 @@ class User():
 
 class Business():
     """contains the business model"""
-    def __init__(self, business_id, business_name, category, location,
-                 created_by):
-        self.business_id = business_id
-        self.business_name = business_name
+    id = 0
+    def __init__(self, name, description, category, location, created_by):
+        Business.id += 1
+        self.id = id
+        self.name = name
         self.category = category
         self.location = location
         self.created_by = created_by
         self.reviews = []
 
     def serialize(self):
-        return {'business_id': self.business_id,
-                'business_name': self.business_name,
+        return {'business_id': self.id,
+                'business_name': self.name,
                 'category': self.category,
                 'location': self.location,
                 'created_by': self.created_by}
 
     def __repr__(self):
-        return 'business is {}'.format(self.business_name)
+        return 'business is {}'.format(self.name)
