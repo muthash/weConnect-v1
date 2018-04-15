@@ -3,9 +3,6 @@ from flask.views import MethodView
 from flask_jwt_extended import get_raw_jwt, jwt_required, get_jwt_identity
 from flask_bcrypt import Bcrypt
 from app.models import User
-# from app.utils import (
-#     validate_null, random_string, send_reset_password, messages
-# )
 from app.baseview import BaseView
 
 auth = Blueprint('auth', __name__, url_prefix='/api/v1')
@@ -73,6 +70,32 @@ class LogoutUser(MethodView):
         return jsonify(response), 200
 
 
+class ResetPassword(BaseView):
+    """Method to reset a user password"""
+    def post(self):
+        """Endpoint to reset a user password"""
+        if not self.validate_json():
+            data = request.get_json()
+            email = data.get('email')
+            user_data = {'email': email}
+            if not self.validate_null(**user_data):
+                user_ = [user for user in users if email == user.email]
+                if user_:
+                    password = self.random_string()
+                    self.send_reset_password(email, password)
+                    user = user_[0]
+                    user.update_password(password)
+                    response = {'message': 'Password reset successfull'+
+                                           ' Check your email for your new password'}
+                    return jsonify(response), 201
+                response = {'message': 'Email address not ragistered'}
+                return jsonify(response), 401
+            return self.validate_null(**user_data)
+        return self.validate_json()
+
+
 auth.add_url_rule('/register', view_func=RegisterUser.as_view('register'))
 auth.add_url_rule('/login', view_func=LoginUser.as_view('login'))
 auth.add_url_rule('/logout', view_func=LogoutUser.as_view('logout'))
+auth.add_url_rule('/reset-password', view_func=ResetPassword.as_view('reset-password'))
+# auth.add_url_rule('/change-password', view_func=ChangePassword.as_view('Change-password'))
