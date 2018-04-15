@@ -5,9 +5,11 @@
 from flask import jsonify
 from flask_api import FlaskAPI
 from flask_jwt_extended import JWTManager
+from flask_mail import Mail
 from instance.config import app_config
 
 jwt = JWTManager()
+mail = Mail()
 
 
 def create_app(config_name):
@@ -18,10 +20,11 @@ def create_app(config_name):
     app.config.from_object(app_config[config_name])
     app.config.from_pyfile('config.py')
     jwt.init_app(app)
+    mail.init_app(app)
 
-    blacklist = set()
 
     from app.auth.views import auth
+    from app.auth.views import blacklist
     # from app.business.views import biz, rev
 
     @app.errorhandler(400)
