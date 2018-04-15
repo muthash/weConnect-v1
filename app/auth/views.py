@@ -46,13 +46,9 @@ class LoginUser(BaseView):
             password = data.get('password')
             user_data = {'email': email, 'password': password}
             if not self.validate_null(**user_data):
-                user_ = [user for user in users if email == user.email]
-                if user_:
-                    user = user_[0]
-                    if Bcrypt().check_password_hash(user.password, password):
+                for user in users:
+                    if user.email == email and Bcrypt().check_password_hash(user.password, password):
                         return self.generate_token(user.email, user.username)
-                    response = {'message': 'Invalid email or password'}
-                    return jsonify(response), 401
                 response = {'message': 'Invalid email or password'}
                 return jsonify(response), 401
             return self.validate_null(**user_data)
@@ -79,18 +75,14 @@ class ResetPassword(BaseView):
             email = data.get('email')
             user_data = {'email': email}
             if not self.validate_null(**user_data):
-                user_ = [user for user in users if email == user.email]
-                if user_:
-                    password = self.random_string()
-                    user = user_[0]
-                    index = users.index(user)
-                    user.update_password(password)
-                    del users[index]
-                    users.insert(index, user)
-                    self.send_reset_password(email, password)
-                    response = {'message': 'Password reset successfull'+
+                for user in users:
+                    if user.email == email:
+                        password = self.random_string()
+                        user.update_password(password)
+                        self.send_reset_password(email, password)
+                        response = {'message': 'Password reset successfull'+
                                            ' Check your email for your new password'}
-                    return jsonify(response), 201
+                        return jsonify(response), 201 
                 response = {'message': 'Email address not ragistered'}
                 return jsonify(response), 401
             return self.validate_null(**user_data)
@@ -110,21 +102,17 @@ class ChangePassword(BaseView):
             jti = get_raw_jwt()['jti']
             user_data = {'old_password': old_pass, 'new_password': new_pass}
             if not self.validate_null(**user_data):
-                user_ = [user for user in users if current_user == user.email]
-                if user_:
-                    user = user_[0]
-                    if Bcrypt().check_password_hash(user.password, old_pass):
-                        user.update_password(new_pass)
-                        index = users.index(user)
-                        del users[index]
-                        users.insert(index, user)
-                        blacklist.add(jti)
-                        response = {'message': 'Password change successfull'+
-                                               ' Login to continue'}
-                        return jsonify(response), 201
-                    response = {'message': 'Enter correct initial password'+
-                                               ' or reset password'}
-                    return jsonify(response), 401
+                for user in users:
+                    if  user.email == current_user:
+                        if Bcrypt().check_password_hash(user.password, old_pass):
+                            user.update_password(new_pass)
+                            blacklist.add(jti)
+                            response = {'message': 'Password change successfull'+
+                                                ' Login to continue'}
+                            return jsonify(response), 201
+                        response = {'message': 'Enter correct initial password'+
+                                                ' or reset password'}
+                        return jsonify(response), 401
                 response = {'message': 'Please login to continue'}
                 return jsonify(response), 401
             return self.validate_null(**user_data)
