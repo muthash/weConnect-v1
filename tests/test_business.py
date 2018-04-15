@@ -106,7 +106,7 @@ class TestDeleteBusiness(BaseTestCase):
 
     def test_incorrect_password(self):
         """Test delete with incorrect password"""
-        self.register_business(self.business_data)
+        self.get_login_token()
         res = self.make_request('/api/v1/businesses/1', data={'password':'test123'}, method='delete')
         result = json.loads(res.data.decode())
         self.assertEqual(result['message'], 'Enter correct password to delete')
@@ -123,7 +123,6 @@ class TestDeleteBusiness(BaseTestCase):
         with self.app.app_context():
             business = Business(**self.business_data, created_by='m@m.com')
             store.append(business)
-            print(store)
             self.get_login_token()
             res = self.make_request('/api/v1/businesses/2', data={'password':'test1234'}, method='delete')
             result = json.loads(res.data.decode())
@@ -136,3 +135,36 @@ class TestDeleteBusiness(BaseTestCase):
         change_res = self.make_request('/api/v1/businesses/1', data={'password':'test1234'}, method='delete')
         result = json.loads(change_res.data.decode())
         self.assertEqual(result['message'], 'The Request should be JSON format')
+
+
+class TestGetBusiness(BaseTestCase):
+    """Test for get business endpoint"""
+    def test_all_businesses(self):
+        """Test get all registered businesses"""
+        self.register_business(self.business_data)
+        res = self.client.get('/api/v1/businesses')
+        result = json.loads(res.data.decode())
+        self.assertEqual(result['message'], "The following businesss are registered")
+        self.assertTrue(result['businesses'])
+
+    def test_empty_businesses(self):
+        """Test get all with no registered businesses"""
+        with self.app.app_context():
+            store.clear()
+            res = self.client.get('/api/v1/businesses')
+            result = json.loads(res.data.decode())
+            self.assertEqual(result['message'], "There are no businesses registered currently")
+
+    def test_business_id(self):
+        """Test get single business"""
+        self.register_business(self.business_data)
+        res = self.client.get('/api/v1/businesses/4')
+        result = json.loads(res.data.decode())
+        self.assertTrue(result['businesses'])
+
+    def test_invalid_business_id(self):
+        """Test get not available single business"""
+        self.register_business(self.business_data)
+        res = self.client.get('/api/v1/businesses/20')
+        result = json.loads(res.data.decode())
+        self.assertTrue(result['message'], 'The business 20 is not available')
