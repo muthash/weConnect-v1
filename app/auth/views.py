@@ -57,11 +57,21 @@ class LoginUser(BaseView):
         if self.validate_null(**user_data):
             return self.validate_null(**user_data)
 
-        for user in users:
-            if user.email == email and Bcrypt().check_password_hash(user.password, password):
-                return self.generate_token(user.email, user.username)
+        user_ = [user for user in users
+                if user.email == email and 
+                Bcrypt().check_password_hash(user.password, password)]
+       
+        if user_:
+            user = user_[0]
+            return self.generate_token(user.email, user.username)
         response = {'message': 'Invalid email or password'}
-        return jsonify(response), 401
+        return jsonify(response), 401    
+        
+        # for user in users:
+        #     if user.email == email and Bcrypt().check_password_hash(user.password, password):
+        #         return self.generate_token(user.email, user.username)
+        # response = {'message': 'Invalid email or password'}
+        # return jsonify(response), 401
 
 
 class LogoutUser(MethodView):
