@@ -18,6 +18,8 @@ class BaseTestCase(unittest.TestCase):
         self.header = {'Content-Type': 'application/json'}
         self.user_data = {'email': 'user@test.com', 'username': 'stephen',
                           'password': 'test1234'}
+        self.reset_user = {'email': 'reset@test.com', 'username': 'muthama',
+                          'password': 'test1234'}
         self.invalid_email = {'email': 'user', 'username': 'stephen',
                               'password': 'test1234'}
         self.login_data = {'email': 'user@test.com', 'password': 'test1234'}
@@ -31,6 +33,8 @@ class BaseTestCase(unittest.TestCase):
         self.update_data = {'name':'ABCD', 'category':'Farming', 'location':'Narok'}
         self.review_data = {'review': 'KTDA services are the best'}
         self.url = None
+        self.reg_res = self.make_request('/api/v1/register', data=self.user_data)
+        self.make_request('/api/v1/register', data=self.reset_user)
 
     def make_request(self, url, method='post', **kwargs):
         """Make a request to the given url with the given method"""
@@ -46,7 +50,7 @@ class BaseTestCase(unittest.TestCase):
 
     def get_login_token(self):
         """Get the access token and add it to the header"""
-        self.make_request('/api/v1/register', data=self.user_data)
+        # self.make_request('/api/v1/register', data=self.user_data)
         login_res = self.make_request('/api/v1/login', data=self.login_data)
         result = json.loads(login_res.data.decode())
         self.header['Authorization'] = 'Bearer ' + result['access_token']
@@ -59,11 +63,11 @@ class BaseTestCase(unittest.TestCase):
         result = json.loads(res.data.decode())
         return result
 
-    def register_review(self):
+    def register_review(self, data):
         """Register a test review for the registered business"""
         self.register_business(self.business_data)
         res = self.make_request('/api/v1/business/1/reviews',
-                                data=self.review_data)
+                                data=data)
         result = json.loads(res.data.decode())
         return result
 

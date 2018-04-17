@@ -9,14 +9,12 @@ class TestRegisterUser(BaseTestCase):
     """Test for Register User endpoint"""
     def test_registration(self):
         """Test user registration works correcty"""
-        res = self.make_request('/api/v1/register', data=self.user_data)
-        result = json.loads(res.data.decode())
+        result = json.loads(self.reg_res.data.decode())
         self.assertEqual(result['message'], "Account created successfully")
-        self.assertEqual(res.status_code, 201)
+        self.assertEqual(self.reg_res.status_code, 201)
     
     def test_already_registered_user(self):
         """Test that a user cannot be registered twice"""
-        self.make_request('/api/v1/register', data=self.user_data)
         second_res = self.make_request('/api/v1/register', data=self.user_data)
         result = json.loads(second_res.data.decode())
         self.assertEqual(result['message'], "User already exists. Please login")
@@ -57,23 +55,19 @@ class TestLoginUser(BaseTestCase):
     """Test for Login User endpoint"""
     def test_user_login(self):
         """Test registered user can login"""
-        self.make_request('/api/v1/register', data=self.user_data)
-        res = self.make_request('/api/v1/login', data=self.login_data)
-        result = json.loads(res.data.decode())
+        result = self.get_login_token()
         self.assertEqual(result['message'], 'Login successfull. Welcome stephen')
-        self.assertEqual(res.status_code, 200)
         self.assertTrue(result['access_token'])
     
     def test_unregistered_user_login(self):
         """Test unregistered user cannot login"""
-        res = self.make_request('/api/v1/login', data=self.login_data)
+        res = self.make_request('/api/v1/login', data=self.unregisterd)
         result = json.loads(res.data.decode())
         self.assertEqual(result['message'], "Invalid email or password")
         self.assertEqual(res.status_code, 401)
 
     def test_invalid_password_login(self):
         """Test invalid password cannot login"""
-        self.make_request('/api/v1/register', data=self.user_data)
         res = self.make_request('/api/v1/login', data=self.incorrect_pass)
         result = json.loads(res.data.decode())
         self.assertEqual(result['message'], "Invalid email or password")
@@ -119,8 +113,7 @@ class TestResetPassword(BaseTestCase):
     """Test reset password user endpoint"""
     def test_password_reset(self):
         """Test password reset works as expected"""
-        self.make_request('/api/v1/register', data=self.user_data)
-        reset_res = self.make_request('/api/v1/reset-password', data=dict(email='user@test.com'))
+        reset_res = self.make_request('/api/v1/reset-password', data=dict(email='reset@test.com'))
         result = json.loads(reset_res.data.decode())
         self.assertEqual(result['message'], 'Password reset successfull'+
                                             ' Check your email for your new password')

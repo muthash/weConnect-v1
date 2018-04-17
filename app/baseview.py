@@ -76,3 +76,11 @@ class BaseView(MethodView):
                  '<br><a href="https://github.com/muthash" target="_blank">Click here to reset password</a>'
         )
         mail.send(message)
+    
+    def normalize_email(self, email):
+        """Lowercase the domain part of the email"""
+        email_part = email.split('@')
+        domain = email_part[1].lower()
+        email = email_part[0]+domain
+        return email
+
