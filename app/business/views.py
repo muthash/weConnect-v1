@@ -33,7 +33,6 @@ class BusinessManipulation(BaseView):
         data = self.remove_extra_spaces(**data_)
         business = Business(**data, created_by=current_user)
         store.append(business)
-        print(store)
         response = {'message': 'Business with name {} created'.format(name)}
         return jsonify(response), 201
 
