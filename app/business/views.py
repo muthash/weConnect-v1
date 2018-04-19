@@ -136,12 +136,7 @@ class ReviewManipulation(BaseView):
 
         if self.validate_null(**data_):
             return self.validate_null(**data_)
-        
-        user_ = [user for user in users if current_user == user.email]
-        if not user_:
-            response = {'message': 'Please login to continue'}
-            return jsonify(response), 401
-        
+
         business_ = [business for business in store if business_id == business.id]
         if not business_:
             response = {'message': 'The business {} is not available'.format(business_id)}
@@ -153,7 +148,7 @@ class ReviewManipulation(BaseView):
             response = {'message': 'The operation is forbidden for own business'}
             return jsonify(response), 403
         data = self.remove_extra_spaces(**data_)
-        store[index].append(data['review'])
+        store[index].reviews.append(data['review'])
         response = {'message': 'Review for business {} created'.format(business_id)}
         return jsonify(response), 201
 

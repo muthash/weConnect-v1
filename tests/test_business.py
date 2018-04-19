@@ -21,7 +21,7 @@ class TestPostBusiness(BaseTestCase):
     
     def test_valid_json_request(self):
         """Test create business request is json format"""
-        self.get_login_token()
+        self.get_login_token(self.user_data)
         del self.header['Content-Type']
         change_res = self.make_request('/api/v1/businesses', data=self.business_data)
         result = json.loads(change_res.data.decode())
@@ -41,21 +41,21 @@ class TestPutBusiness(BaseTestCase):
     """Test for editing business endpoint"""
     def test_business_can_be_edited(self):
         """Test edit an existing business works as expected"""
-        self.get_login_token()
+        self.get_login_token(self.user_data)
         res = self.make_request('/api/v1/businesses/15', data=self.update_data, method='put')
         result = json.loads(res.data.decode())
         self.assertEqual(result['message'], "Business updated successfully")
 
     def test_null_edit_data(self):
         """Test edit business with null input"""
-        self.get_login_token()
+        self.get_login_token(self.user_data)
         res = self.make_request('/api/v1/businesses/1', data=self.review_data, method='put')
         result = json.loads(res.data.decode())
         self.assertTrue(result['message'])
 
     def test_non_existing_business(self):
         """Test edit business that is not available"""
-        self.get_login_token()
+        self.get_login_token(self.user_data)
         res = self.make_request('/api/v1/businesses/2', data=self.business_data, method='put')
         result = json.loads(res.data.decode())
         self.assertEqual(result['message'], 'The business 2 is not available')
@@ -71,7 +71,7 @@ class TestPutBusiness(BaseTestCase):
 
     def test_valid_json_request(self):
         """Test edit business request is json format"""
-        self.get_login_token()
+        self.get_login_token(self.user_data)
         del self.header['Content-Type']
         change_res = self.make_request('/api/v1/businesses/1', data=self.business_data, method='put')
         result = json.loads(change_res.data.decode())
@@ -89,7 +89,7 @@ class TestDeleteBusiness(BaseTestCase):
 
     def test_null_password(self):
         """Test delete with null password"""
-        self.get_login_token()
+        self.get_login_token(self.user_data)
         res = self.make_request('/api/v1/businesses/2', data={}, method='delete')
         result = json.loads(res.data.decode())
         self.assertEqual(result['message'], ['Please enter your password'])
@@ -105,14 +105,14 @@ class TestDeleteBusiness(BaseTestCase):
 
     def test_incorrect_password(self):
         """Test delete with incorrect password"""
-        self.get_login_token()
+        self.get_login_token(self.user_data)
         res = self.make_request('/api/v1/businesses/1', data={'password':'test123'}, method='delete')
         result = json.loads(res.data.decode())
         self.assertEqual(result['message'], 'Enter correct password to delete')
 
     def test_not_exist_business(self):
         """Test delete non existing business"""
-        self.get_login_token()
+        self.get_login_token(self.user_data)
         res = self.make_request('/api/v1/businesses/100', data={'password':'test1234'}, method='delete')
         result = json.loads(res.data.decode())
         self.assertEqual(result['message'], 'The business 100 is not available')
@@ -122,14 +122,14 @@ class TestDeleteBusiness(BaseTestCase):
         with self.app.app_context():
             business = Business(**self.business_data, created_by='m@m.com')
             store.append(business)
-            self.get_login_token()
+            self.get_login_token(self.user_data)
             res = self.make_request('/api/v1/businesses/4', data={'password':'test1234'}, method='delete')
             result = json.loads(res.data.decode())
             self.assertEqual(result['message'], 'The operation is forbidden for this business')
 
     def test_valid_json_request(self):
         """Test delete business request is json format"""
-        self.get_login_token()
+        self.get_login_token(self.user_data)
         del self.header['Content-Type']
         change_res = self.make_request('/api/v1/businesses/1', data={'password':'test1234'}, method='delete')
         result = json.loads(change_res.data.decode())

@@ -20,9 +20,12 @@ class BaseTestCase(unittest.TestCase):
                           'password': 'test1234'}
         self.reset_user = {'email': 'reset@test.com', 'username': 'muthama',
                           'password': 'test1234'}
+        self.review_user = {'email': 'review@test.com', 'username': 'reviewer',
+                          'password': 'test1234'}
         self.invalid_email = {'email': 'user', 'username': 'stephen',
                               'password': 'test1234'}
         self.login_data = {'email': 'user@test.com', 'password': 'test1234'}
+        self.login_reviewer = {'email': 'review@test.com', 'password': 'test1234'}
         self.unregisterd = {'email': 'notuser@me.com', 'password': 'test1234'}
         self.incorrect_pass = {'email': 'user@test.com', 'password': 'test123'}
         self.missing_pass = {'email': 'user@test.com'}
@@ -48,25 +51,24 @@ class BaseTestCase(unittest.TestCase):
                                       headers=self.header, data=data)
         return self.client.post(path=self.url, headers=self.header, data=data)
 
-    def get_login_token(self):
+    def get_login_token(self, data):
         """Get the access token and add it to the header"""
         # self.make_request('/api/v1/register', data=self.user_data)
-        login_res = self.make_request('/api/v1/login', data=self.login_data)
+        login_res = self.make_request('/api/v1/login', data=data)
         result = json.loads(login_res.data.decode())
         self.header['Authorization'] = 'Bearer ' + result['access_token']
         return result
 
     def register_business(self, data):
         """Register a test business"""
-        self.get_login_token()
+        self.get_login_token(self.login_data)
         res = self.make_request('/api/v1/businesses', data=data)
         result = json.loads(res.data.decode())
         return result
 
     def register_review(self, data):
         """Register a test review for the registered business"""
-        self.register_business(self.business_data)
-        res = self.make_request('/api/v1/business/1/reviews',
+        res = self.make_request('/api/v1/businesses/1/reviews',
                                 data=data)
         result = json.loads(res.data.decode())
         return result

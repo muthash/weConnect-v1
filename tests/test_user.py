@@ -55,7 +55,7 @@ class TestLoginUser(BaseTestCase):
     """Test for Login User endpoint"""
     def test_user_login(self):
         """Test registered user can login"""
-        result = self.get_login_token()
+        result = self.get_login_token(self.user_data)
         self.assertEqual(result['message'], 'Login successfull. Welcome stephen')
         self.assertTrue(result['access_token'])
     
@@ -93,7 +93,7 @@ class TestLogoutUser(BaseTestCase):
     """Test for Logout User endpoint"""
     def test_logout_user(self):
         """Test if logged in user can logout"""
-        self.get_login_token()
+        self.get_login_token(self.user_data)
         logout_res = self.client.post('/api/v1/logout', headers=self.header)
         result = json.loads(logout_res.data.decode())
         self.assertEqual(result['message'], "Successfully logged out")
@@ -101,7 +101,7 @@ class TestLogoutUser(BaseTestCase):
 
     def test_already_logout_user(self):
         """Test logout for aleady logged out user"""
-        self.get_login_token()
+        self.get_login_token(self.user_data)
         self.client.post('/api/v1/logout', headers=self.header)
         logout_res = self.client.post('/api/v1/logout', headers=self.header)
         result = json.loads(logout_res.data.decode())
@@ -146,7 +146,7 @@ class TestResetPassword(BaseTestCase):
 class TestChangetPassword(BaseTestCase):
     """Test change password user endpoint"""
     def change_password(self, data):
-        self.get_login_token()
+        self.get_login_token(self.user_data)
         change_res = self.make_request('/api/v1/change-password', data=data, method='put')
         result = json.loads(change_res.data.decode())
         return result
@@ -177,7 +177,7 @@ class TestChangetPassword(BaseTestCase):
 
     def test_valid_json_request(self):
         """Test reset password request is json format"""
-        self.get_login_token()
+        self.get_login_token(self.user_data)
         del self.header['Content-Type']
         change_res = self.make_request('/api/v1/change-password', data=self.passwords, method='put')
         result = json.loads(change_res.data.decode())
