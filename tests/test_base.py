@@ -34,7 +34,7 @@ class BaseTestCase(unittest.TestCase):
         self.review_data = {'review': 'KTDA services are the best'}
         self.url = None
         self.reg_res = self.make_request('/api/v1/register', data=self.user_data)
-        self.make_request('/api/v1/register', data=self.reset_user)
+        self.register_business(self.business_data)
 
     def make_request(self, url, method='post', **kwargs):
         """Make a request to the given url with the given method"""

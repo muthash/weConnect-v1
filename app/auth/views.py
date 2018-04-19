@@ -35,13 +35,13 @@ class RegisterUser(BaseView):
         user_data['username'] = norm_name['name']
 
         emails = [user.email for user in users]
-        if email not in emails:
-            user = User(email, username, password)
-            users.append(user)
-            response = {'message': 'Account created successfully'}
-            return jsonify(response), 201
-        response = {'message': 'User already exists. Please login'}
-        return jsonify(response), 409
+        if email in emails:
+            response = {'message': 'User already exists. Please login'}
+            return jsonify(response), 409
+        user = User(email, username, password)
+        users.append(user)
+        response = {'message': 'Account created successfully'}
+        return jsonify(response), 201
         
 
 class LoginUser(BaseView):
@@ -63,11 +63,12 @@ class LoginUser(BaseView):
                 if user.email == email and 
                 Bcrypt().check_password_hash(user.password, password)]
        
-        if user_:
-            user = user_[0]
-            return self.generate_token(user.email, user.username)
-        response = {'message': 'Invalid email or password'}
-        return jsonify(response), 401    
+        if not user_:
+            response = {'message': 'Invalid email or password'}
+            return jsonify(response), 401 
+        user = user_[0]
+        return self.generate_token(user.email, user.username)
+           
 
 
 class LogoutUser(MethodView):
