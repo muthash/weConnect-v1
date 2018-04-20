@@ -106,7 +106,7 @@ class TestDeleteBusiness(BaseTestCase):
     def test_incorrect_password(self):
         """Test delete with incorrect password"""
         self.get_login_token(self.user_data)
-        res = self.make_request('/api/v1/businesses/1', data={'password':'test123'}, method='delete')
+        res = self.make_request('/api/v1/businesses/1', data={'password':'test12356'}, method='delete')
         result = json.loads(res.data.decode())
         self.assertEqual(result['message'], 'Enter correct password to delete')
 

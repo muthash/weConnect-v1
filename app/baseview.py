@@ -37,6 +37,9 @@ class BaseView(MethodView):
             if not strip_text:
                     message = 'Please enter your {}'.format(key)
                     messages.append(message)
+            if kwargs[key] is not None and key == 'password' and len(kwargs[key]) < 8:
+                message = 'Password should be atleast 8 characters'
+                messages.append(message)
             if kwargs[key] is None:
                 message = 'Please enter your {}'.format(key)
                 messages.append(message)

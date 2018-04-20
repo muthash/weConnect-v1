@@ -27,7 +27,8 @@ class BaseTestCase(unittest.TestCase):
         self.login_data = {'email': 'user@test.com', 'password': 'test1234'}
         self.login_reviewer = {'email': 'review@test.com', 'password': 'test1234'}
         self.unregisterd = {'email': 'notuser@me.com', 'password': 'test1234'}
-        self.incorrect_pass = {'email': 'user@test.com', 'password': 'test123'}
+        self.incorrect_pass = {'email': 'user@test.com', 'password': 'test12345'}
+        self.short_pass = {'email': 'user@test.com', 'password': 'test1'}
         self.missing_pass = {'email': 'user@test.com'}
         self.passwords = {'old_password': "test1234", 'new_password': "newtestpass"}
         self.invalid_pass = {'old_password': "test123", 'new_password': "newpass"}

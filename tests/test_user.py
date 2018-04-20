@@ -58,6 +58,11 @@ class TestLoginUser(BaseTestCase):
         result = self.get_login_token(self.user_data)
         self.assertEqual(result['message'], 'Login successfull. Welcome stephen')
         self.assertTrue(result['access_token'])
+    def test_short_password(self):
+        """Test login with short password length"""
+        res = self.make_request('/api/v1/login', data=self.short_pass)
+        result = json.loads(res.data.decode())
+        self.assertEqual(result['message'], ['Password should be atleast 8 characters'])
     
     def test_unregistered_user_login(self):
         """Test unregistered user cannot login"""
