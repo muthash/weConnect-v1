@@ -31,14 +31,15 @@ class BaseView(MethodView):
         """Returns a list with null fields"""
         messages = []
         for key in kwargs:
+            strip_text = True
+            if kwargs[key] is not None:
+                strip_text = re.sub(r'\s+', '', kwargs[key])
+            if not strip_text:
+                    message = 'Please enter your {}'.format(key)
+                    messages.append(message)
             if kwargs[key] is None:
                 message = 'Please enter your {}'.format(key)
                 messages.append(message)
-            if kwargs[key] is not None:
-                strip_text = re.sub(r'\s+', '', kwargs[key])
-                if not strip_text:
-                    message = 'Please enter your {}'.format(key)
-                    messages.append(message)
         if messages:
             response = {'message': messages}
             return jsonify(response), 400
