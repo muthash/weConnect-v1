@@ -19,6 +19,14 @@ class TestRegisterUser(BaseTestCase):
         """Test that a user cannot be registered twice"""
         self.register(msg="User already exists. Please login", code=409)
 
+    def test_invalid_password_pattern(self):
+        """Test register with short password length"""
+        self.reg_data['password'] = 'short'
+        self.register(code=400,
+                      msg='Password should contain at least eight characters' +
+                          ' with at least one digit, one uppercase letter' + 
+                          ' and one lowercase letter')
+
     def test_register_invalid_email(self):
         """Test user registration with an invalid email address"""
         self.reg_data['email'] = 'invalid'
@@ -26,7 +34,7 @@ class TestRegisterUser(BaseTestCase):
                       " It must have exactly one @-sign.", code=400)
 
     def test_register_missing_password(self):
-        """Test user registration with an missing password"""
+        """Test user registration with missing password"""
         del self.reg_data['password']
         self.register(msg=['The password should not be missing'], code=400)
 
@@ -43,12 +51,6 @@ class TestLoginUser(BaseTestCase):
     def test_user_login(self):
         """Test registered user can login"""
         self.login(code=200, msg='Login successfull. Welcome stephen')
-
-    def test_short_password(self):
-        """Test login with short password length"""
-        self.reg_data['password'] = 'short'
-        self.login(code=400,
-                   msg=['Password should be atleast 8 characters'])
 
     def test_unregistered_user_login(self):
         """Test unregistered user cannot login"""
