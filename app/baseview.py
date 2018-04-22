@@ -14,13 +14,14 @@ class BaseView(MethodView):
     def validate_json(self):
         """Returns false if request is json"""
         if request.get_json(silent=True) is None:
-            response = {'message':'The Request should be JSON format'}
+            response = {'message': 'The Request should be JSON format'}
             return jsonify(response), 400
         return False
 
     def check_email(self, email):
         try:
-            validator_response = validate_email(email, check_deliverability=False)
+            validator_response = validate_email(email,
+                                                check_deliverability=False)
             email = validator_response["email"]
             return False
         except EmailNotValidError as error:
@@ -35,24 +36,27 @@ class BaseView(MethodView):
             if kwargs[key] is not None:
                 strip_text = re.sub(r'\s+', '', kwargs[key])
             if not strip_text:
-                    message = 'Please enter your {}'.format(key)
+                    message = f'The {key} should not be empty'
                     messages.append(message)
-            if kwargs[key] is not None and key == 'password' and len(kwargs[key]) < 8:
+            if (kwargs[key] is not None and key == 'password' and
+               len(kwargs[key]) < 8):
                 message = 'Password should be atleast 8 characters'
                 messages.append(message)
             if kwargs[key] is None:
-                message = 'Please enter your {}'.format(key)
+                message = f'The {key} should not be missing'
                 messages.append(message)
         if messages:
             response = {'message': messages}
             return jsonify(response), 400
         return False
 
-    def generate_token(self, user, username, expires=datetime.timedelta(hours=1)):
+    def generate_token(self, user, username,
+                       expires=datetime.timedelta(hours=1)):
         """Return access token and response to user"""
         response = {
-            'message': 'Login successfull. Welcome {}'.format(username),
-            'access_token': create_access_token(identity=user, expires_delta=expires)
+            'message': f'Login successfull. Welcome {username}',
+            'access_token': create_access_token(identity=user,
+                                                expires_delta=expires)
         }
         return jsonify(response), 200
 
@@ -76,15 +80,13 @@ class BaseView(MethodView):
         message = Message(
             subject='Weconnect Account Password Reset',
             recipients=[email],
-            html='Your new password is: {}'.format(password) +
-                 '<br><a href="https://github.com/muthash" target="_blank">Click here to reset password</a>'
+            html=f'Your new password is: {password}'
         )
         mail.send(message)
-    
+
     def normalize_email(self, email):
         """Lowercase the domain part of the email"""
         email_part = email.split('@')
         domain = email_part[1].lower()
-        email = email_part[0]+domain
+        email = email_part[0]+'@'+domain
         return email
-
