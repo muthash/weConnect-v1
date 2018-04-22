@@ -20,10 +20,10 @@ class BaseTestCase(unittest.TestCase):
         self.client = self.app.test_client()
         self.header = {'Content-Type': 'application/json'}
 
-        self.reg_data = {'email': 'user@TEST.com', 'username': 'stephen',
-                         'password': 'test1234'}
-        self.passwords = {'old_password': 'test1234',
-                          'new_password': 'test1235'}
+        self.reg_data = {'email': 'user@test.com', 'username': 'stephen',
+                         'password': 'Test1234'}
+        self.passwords = {'old_password': 'Test1234',
+                          'new_password': 'Test12345'}
         self.reg_res = self.make_request('/api/v1/register', 'post',
                                          data=self.reg_data)
         self.get_login_token(self.reg_data)
@@ -34,7 +34,7 @@ class BaseTestCase(unittest.TestCase):
                               'location': 'Nairobi'}
         self.biz_res = self.make_request('/api/v1/businesses', 'post', 
                                          data=self.business_data)
-        self.password = {'password': 'test1234'}
+        self.password = {'password': 'Test1234'}
 
         self.review_data={'review': 'Andela is the BEST. TIA'}
 
