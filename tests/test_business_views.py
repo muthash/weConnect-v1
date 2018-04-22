@@ -90,7 +90,7 @@ class TestDeleteBusiness(BaseTestCase):
 
     def test_incorrect_password(self):
         """Test delete with incorrect password"""
-        self.password={'password':'test12345'}
+        self.password={'password':'Test12345'}
         self.delete_business(code=401, msg='Enter correct password to delete')
 
     def test_delete_another_user_business(self):
@@ -123,31 +123,42 @@ class TestDeleteBusiness(BaseTestCase):
 
 class TestGetBusiness(BaseTestCase):
     """Test for get business endpoint"""
+    def get_business(self, url):
+        res = self.client.get(path=url)
+        return json.loads(res.data.decode())
+
     def test_all_businesses(self):
         """Test get all registered businesses"""
-        res = self.client.get('/api/v1/businesses')
-        result = json.loads(res.data.decode())
+        result = self.get_business('/api/v1/businesses')
         self.assertTrue(result['businesses'])
 
     def test_empty_businesses(self):
         """Test get all with no registered businesses"""
         with self.app.app_context():
             store.clear()
-            res = self.client.get('/api/v1/businesses')
-            result = json.loads(res.data.decode())
+            result = self.get_business('/api/v1/businesses')
             self.assertEqual(result['message'],
                              "There are no businesses registered currently")
+    
+    def test_filter_businesses_by_category(self):
+        """Test get all registered businesses in a category"""
+        result = self.get_business('/api/v1/businesses?category=IT')
+        self.assertTrue(result['businesses'])
+
+    def test_not_found_category(self):
+        """Test filter not available category"""
+        result = self.get_business('/api/v1/businesses?category=Farming')
+        self.assertEqual(result['message'],
+                         'There are no businesses registered in Farming category')
 
     def test_business_id(self):
         """Test get single business"""
-        res = self.client.get('/api/v1/businesses/1')
-        result = json.loads(res.data.decode())
+        result = self.get_business('/api/v1/businesses/1')
         self.assertTrue(result['businesses'])
 
     def test_invalid_business_id(self):
         """Test get not available single business"""
-        res = self.client.get('/api/v1/businesses/10')
-        result = json.loads(res.data.decode())
+        result = self.get_business('/api/v1/businesses/10')
         self.assertTrue(result['message'], 'The business 10 is not available')
 
 
