@@ -72,26 +72,8 @@ class BaseTestCase(unittest.TestCase):
         self.header['Authorization'] = 'Bearer ' + result['access_token']
         return result
 
-    # def register_business(self, data):
-    #     """Register a test business"""
-    #     self.get_login_token(self.login_data)
-    #     res = self.make_request('/api/v1/businesses', data=data)
-    #     result = json.loads(res.data.decode())
-    #     return result
-
-    # def register_review(self, data):
-    #     """Register a test review for the registered business"""
-    #     res = self.make_request('/api/v1/businesses/1/reviews',
-    #                             data=data)
-    #     result = json.loads(res.data.decode())
-    #     return result
-
     def tearDown(self):
         """teardown all initialized variables"""
         users.clear()
         store.clear()
         Business.this_id = 0
-
-
-if __name__ == "__main__":
-    unittest.main()
