@@ -116,15 +116,25 @@ class BusinessManipulation(BaseView):
     @jwt_optional
     def get(self, business_id):
         """return a list of all businesses else a single business"""
-        if business_id is None:
+        filter_by = request.args.get('category', 'all', type=str)
+        if business_id is None and filter_by == "all":
             business_ = [business.serialize() for business in store]
             if business_:
                 response = {'businesses': business_}
                 return jsonify(response), 200
             response = {'message': 'There are no businesses registered' +
                                    ' currently'}
-            return jsonify(response), 404
-        else:
+            return jsonify(response), 202
+        if business_id is None and filter_by != "all":
+            business_ = [business.serialize() for business in store
+                        if filter_by == business.category]
+            if business_:
+                response = {'businesses': business_}
+                return jsonify(response), 200
+            response = {'message': 'There are no businesses registered' +
+                                   f' in {filter_by} category'}
+            return jsonify(response), 202
+        if business_id is not None:
             business_ = [business.serialize() for business in store
                          if business_id == business.id]
             if business_:
