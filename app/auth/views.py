@@ -29,6 +29,9 @@ class RegisterUser(BaseView):
         
         if self.check_email(email):
             return self.check_email(email)
+        
+        if self.check_password(password):
+            return self.check_password(password)
 
         email = self.normalize_email(email)
         norm_name = self.remove_extra_spaces(name=username)
@@ -55,11 +58,9 @@ class LoginUser(BaseView):
         email = data.get('email')
         password = data.get('password')
         user_data = {'email': email, 'password': password}
-
         if self.validate_null(**user_data):
             return self.validate_null(**user_data)
-        
-        email = self.normalize_email(email)
+
         user_ = [user for user in users
                  if user.email == email and
                  Bcrypt().check_password_hash(user.password, password)]
