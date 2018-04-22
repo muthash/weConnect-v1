@@ -38,10 +38,6 @@ class BaseView(MethodView):
             if not strip_text:
                     message = f'The {key} should not be empty'
                     messages.append(message)
-            if (kwargs[key] is not None and key == 'password' and
-               len(kwargs[key]) < 8):
-                message = 'Password should be atleast 8 characters'
-                messages.append(message)
             if kwargs[key] is None:
                 message = f'The {key} should not be missing'
                 messages.append(message)
@@ -90,3 +86,11 @@ class BaseView(MethodView):
         domain = email_part[1].lower()
         email = email_part[0]+'@'+domain
         return email
+
+    def check_password(self, password):
+        if re.match(r"(?=\D*\d)(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])[A-Za-z0-9]{8,}$", password):
+            return False
+        response = {'message': 'Password should contain at least eight characters' +
+                               ' with at least one digit, one uppercase letter' + 
+                               ' and one lowercase letter'}
+        return jsonify(response), 400
