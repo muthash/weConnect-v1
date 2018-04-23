@@ -46,7 +46,7 @@ class TestRegisterUser(BaseTestCase):
 class TestLoginUser(BaseTestCase):
     """Test for Login User endpoint"""
     def login(self, msg, code):
-        self.make_test('/api/v1/login', data=self.reg_data, code=code, msg=msg)
+        self.make_test('/api/v1/login', method='post', data=self.reg_data, code=code, msg=msg)
 
     def test_user_login(self):
         """Test registered user can login"""

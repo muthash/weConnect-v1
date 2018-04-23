@@ -61,7 +61,7 @@ class BaseTestCase(unittest.TestCase):
             message = kwargs['msg']
             code = kwargs['code']
 
-        res = self.make_request(url=url, method=method, data=data)
+        res = self.make_request(url, method, data=data)
         result = json.loads(res.data.decode())
         self.assertEqual(result['message'], message)
         self.assertEqual(res.status_code, code)
