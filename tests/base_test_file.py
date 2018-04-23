@@ -53,6 +53,7 @@ class BaseTestCase(unittest.TestCase):
     def make_test(self, url, method='post', jsons=True, **kwargs):
         """Test request is json format"""
         data = kwargs['data']
+        url_ = url
         if not jsons:
             del self.header['Content-Type']
             message = 'The Request should be JSON format'
@@ -61,7 +62,7 @@ class BaseTestCase(unittest.TestCase):
             message = kwargs['msg']
             code = kwargs['code']
 
-        res = self.make_request(url, method, data=data)
+        res = self.make_request(url_, method, data=data)
         result = json.loads(res.data.decode())
         self.assertEqual(result['message'], message)
         self.assertEqual(res.status_code, code)
