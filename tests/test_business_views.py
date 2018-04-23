@@ -10,7 +10,7 @@ from tests.base_test_file import BaseTestCase
 class TestPostBusiness(BaseTestCase):
     """Test for post business endpoint"""
     def register_business(self, msg, code):
-        self.make_test('/api/v1/businesses', data=self.business_data,
+        self.make_test(url='/api/v1/businesses', data=self.business_data,
                        code=code, msg=msg)
 
     def test_business_creation(self):
