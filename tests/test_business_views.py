@@ -69,7 +69,7 @@ class TestPutBusiness(BaseTestCase):
 
     def test_valid_json_request(self):
         """Test edit business request is json format"""
-        self.make_test(url='/api/v1/businesses/1', method='put', jsons=False,
+        self.make_test('/api/v1/businesses/1', method='put', jsons=False,
                        data=self.business_data)
 
 
