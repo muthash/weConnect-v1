@@ -69,15 +69,15 @@ class TestPutBusiness(BaseTestCase):
 
     def test_valid_json_request(self):
         """Test edit business request is json format"""
-        self.make_test('/api/v1/businesses/1', jsons=False, method='put',
+        self.make_test('/api/v1/businesses/1', method='put', jsons=False,
                        data=self.business_data)
 
 
 class TestDeleteBusiness(BaseTestCase):
     """Test for delete business endpoint"""
     def delete_business(self, msg, code):
-        self.make_test('/api/v1/businesses/1', data=self.password,
-                       method='delete', code=code, msg=msg)
+        self.make_test('/api/v1/businesses/1', method='delete', 
+                       data=self.password, code=code, msg=msg)
 
     def test_business_can_be_deleted(self):
         """Test delete an existing business"""
@@ -117,7 +117,7 @@ class TestDeleteBusiness(BaseTestCase):
 
     def test_valid_json_request(self):
         """Test delete business request is json format"""
-        self.make_test('/api/v1/businesses/1', jsons=False, method='delete',
+        self.make_test('/api/v1/businesses/1', method='delete', jsons=False,
                        data=self.password)
 
 
