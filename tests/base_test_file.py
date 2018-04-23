@@ -52,6 +52,8 @@ class BaseTestCase(unittest.TestCase):
 
     def make_test(self, url, method='post', jsons=True, **kwargs):
         """Make the test to a given url"""
+        url = url
+        method = method
         data = kwargs['data']
         if not jsons:
             del self.header['Content-Type']
