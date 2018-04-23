@@ -52,8 +52,6 @@ class BaseTestCase(unittest.TestCase):
 
     def make_test(self, url, method='post', jsons=True, **kwargs):
         """Make the test to a given url"""
-        url = url
-        method = method
         data = kwargs['data']
         if not jsons:
             del self.header['Content-Type']
@@ -63,7 +61,7 @@ class BaseTestCase(unittest.TestCase):
             message = kwargs['msg']
             code = kwargs['code']
 
-        res = self.make_request(url, method, data=data)
+        res = self.make_request(url, method, data)
         result = json.loads(res.data.decode())
         self.assertEqual(result['message'], message)
         self.assertEqual(res.status_code, code)
