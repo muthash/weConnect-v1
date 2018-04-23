@@ -50,7 +50,7 @@ class BaseTestCase(unittest.TestCase):
                                       headers=self.header, data=data)
         return self.client.post(path=url, headers=self.header, data=data)
 
-    def make_test(self, url, method='post', jsons=True, **kwargs):
+    def automate(self, url, method='post', jsons=True, **kwargs):
         """Make the test to a given url"""
         data = kwargs['data']
         if not jsons:

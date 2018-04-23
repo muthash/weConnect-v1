@@ -10,7 +10,7 @@ from tests.base_test_file import BaseTestCase
 class TestPostBusiness(BaseTestCase):
     """Test for post business endpoint"""
     def register_business(self, msg, code):
-        self.make_test(url='/api/v1/businesses', data=self.business_data,
+        self.automate(url='/api/v1/businesses', data=self.business_data,
                        code=code, msg=msg)
 
     def test_business_creation(self):
@@ -37,13 +37,13 @@ class TestPostBusiness(BaseTestCase):
 
     def test_valid_json_request(self):
         """Test create business request is json format"""
-        self.make_test(url='/api/v1/businesses', jsons=False, data=self.business_data)
+        self.automate(url='/api/v1/businesses', jsons=False, data=self.business_data)
 
 class TestPutBusiness(BaseTestCase):
     """Test for editing business endpoint"""
     def edit_business(self, msg, code):
         self.business_data['name'] = 'iHub'
-        self.make_test(url='/api/v1/businesses/1', data=self.business_data,
+        self.automate(url='/api/v1/businesses/1', data=self.business_data,
                        method='put', code=code, msg=msg)
 
     def test_business_can_be_edited(self):
@@ -57,7 +57,7 @@ class TestPutBusiness(BaseTestCase):
 
     def test_non_existing_business(self):
         """Test edit business that is not available"""
-        self.make_test(url='/api/v1/businesses/2', data=self.business_data, method='put',
+        self.automate(url='/api/v1/businesses/2', data=self.business_data, method='put',
                        code=404, msg='The business with id 2 is not available')
 
     def test_forbidden_business(self):
@@ -69,14 +69,14 @@ class TestPutBusiness(BaseTestCase):
 
     def test_valid_json_request(self):
         """Test edit business request is json format"""
-        self.make_test(url='/api/v1/businesses/1', method='put', jsons=False,
+        self.automate(url='/api/v1/businesses/1', method='put', jsons=False,
                        data=self.business_data)
 
 
 class TestDeleteBusiness(BaseTestCase):
     """Test for delete business endpoint"""
     def delete_business(self, msg, code):
-        self.make_test(url='/api/v1/businesses/1', method='delete', 
+        self.automate(url='/api/v1/businesses/1', method='delete', 
                        data=self.password, code=code, msg=msg)
 
     def test_business_can_be_deleted(self):
@@ -111,13 +111,13 @@ class TestDeleteBusiness(BaseTestCase):
 
     def test_not_exist_business(self):
         """Test delete non existing business"""
-        self.make_test(url='/api/v1/businesses/10', data=self.password,
+        self.automate(url='/api/v1/businesses/10', data=self.password,
                        method='delete', code=404,
                        msg='The business with id 10 is not available')
 
     def test_valid_json_request(self):
         """Test delete business request is json format"""
-        self.make_test(url='/api/v1/businesses/1', method='delete', jsons=False,
+        self.automate(url='/api/v1/businesses/1', method='delete', jsons=False,
                        data=self.password)
 
 
@@ -174,7 +174,7 @@ class TestGetReview(BaseTestCase):
 class TestPostReview(BaseTestCase):
     """Test for post review endpoint"""
     def create_review(self, msg, code):
-        self.make_test(url='/api/v1/businesses/1/reviews', data=self.review_data,
+        self.automate(url='/api/v1/businesses/1/reviews', data=self.review_data,
                        code=code, msg=msg)
 
     def test_review_creation(self):
@@ -193,7 +193,7 @@ class TestPostReview(BaseTestCase):
 
     def test_review_not_available_business(self):
         """Test create review for non existing business"""
-        self.make_test(url='/api/v1/businesses/10/reviews', data=self.review_data,
+        self.automate(url='/api/v1/businesses/10/reviews', data=self.review_data,
                        code=404, msg='The business with id 10 is not available')
 
     def test_null_data(self):
@@ -203,4 +203,4 @@ class TestPostReview(BaseTestCase):
 
     def test_valid_json_request(self):
         """Test create review request is json format"""
-        self.make_test(url='/api/v1/businesses/1/reviews', jsons=False, data=self.review_data)
+        self.automate(url='/api/v1/businesses/1/reviews', jsons=False, data=self.review_data)
