@@ -1,9 +1,6 @@
 """Test case for business manipulation view"""
 import json
-import datetime
-from flask_jwt_extended import create_access_token
 from app.business.views import store
-from app.models import Business
 from tests.base_test_file import BaseTestCase
 
 
@@ -76,7 +73,7 @@ class TestPutBusiness(BaseTestCase):
 class TestDeleteBusiness(BaseTestCase):
     """Test for delete business endpoint"""
     def delete_business(self, msg, code):
-        self.automate(url='/api/v1/businesses/1', method='delete', 
+        self.automate(url='/api/v1/businesses/1', method='delete',
                        data=self.password, code=code, msg=msg)
 
     def test_business_can_be_deleted(self):
@@ -99,7 +96,7 @@ class TestDeleteBusiness(BaseTestCase):
             self.reg_data['email'] = 'anotheruser@test.com'
             self.make_request('/api/v1/register', 'post', data=self.reg_data)
             self.get_login_token(self.reg_data)
-            self.delete_business(code=403, 
+            self.delete_business(code=403,
                                  msg='The operation is forbidden for this business')
 
     def test_not_user(self):
@@ -139,7 +136,7 @@ class TestGetBusiness(BaseTestCase):
             result = self.get_business('/api/v1/businesses')
             self.assertEqual(result['message'],
                              "There are no businesses registered currently")
-    
+
     def test_filter_businesses_by_category(self):
         """Test get all registered businesses in a category"""
         result = self.get_business('/api/v1/businesses?category=IT')
@@ -183,12 +180,12 @@ class TestPostReview(BaseTestCase):
             self.reg_data['email'] = 'anotheruser@test.com'
             self.make_request('/api/v1/register', 'post', data=self.reg_data)
             self.get_login_token(self.reg_data)
-            self.create_review(code=201, 
+            self.create_review(code=201,
                                msg='Review for business with id 1 created')
 
     def test_review_own_business(self):
         """Test create review by business owner"""
-        self.create_review(code=403, 
+        self.create_review(code=403,
                            msg='The operation is forbidden for own business')
 
     def test_review_not_available_business(self):

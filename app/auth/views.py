@@ -26,10 +26,10 @@ class RegisterUser(BaseView):
 
         if self.validate_null(**user_data):
             return self.validate_null(**user_data)
-        
+
         if self.check_email(email):
             return self.check_email(email)
-        
+
         if self.check_password(password):
             return self.check_password(password)
 
