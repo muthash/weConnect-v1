@@ -7,7 +7,7 @@ class TestRegisterUser(BaseTestCase):
     """Test for Register User endpoint"""
     def register(self, msg, code):
         self.automate('/api/v1/register', data=self.reg_data, code=code,
-                       msg=msg)
+                      msg=msg)
 
     def test_registration(self):
         """Test user registration works correcty"""
@@ -24,7 +24,7 @@ class TestRegisterUser(BaseTestCase):
         self.reg_data['password'] = 'short'
         self.register(code=400,
                       msg='Password should contain at least eight characters' +
-                          ' with at least one digit, one uppercase letter' + 
+                          ' with at least one digit, one uppercase letter' +
                           ' and one lowercase letter')
 
     def test_register_invalid_email(self):
@@ -77,14 +77,14 @@ class TestLogoutUser(BaseTestCase):
     def test_logout_user(self):
         """Test if logged in user can logout"""
         self.automate('/api/v1/logout', data=None, code=200,
-                       msg='Successfully logged out')
+                      msg='Successfully logged out')
 
 
 class TestResetPassword(BaseTestCase):
     """Test reset password user endpoint"""
     def reset_password(self, code, msg, data):
         self.automate('/api/v1/reset-password', data=data,  code=code,
-                       msg=msg)
+                      msg=msg)
 
     def test_password_reset(self):
         """Test password reset works as expected"""
@@ -107,14 +107,14 @@ class TestResetPassword(BaseTestCase):
     def test_valid_json_request(self):
         """Test reset password request is json format"""
         self.automate('/api/v1/reset-password', jsons=False,
-                       data=self.reg_data['email'])
+                      data=self.reg_data['email'])
 
 
 class TestChangetPassword(BaseTestCase):
     """Test change password user endpoint"""
     def change_password(self, msg, code):
         self.automate('/api/v1/change-password', data=self.passwords,
-                       code=code, method='put', msg=msg)
+                      code=code, method='put', msg=msg)
 
     def test_password_change(self):
         """Test password change works as expected"""
@@ -143,4 +143,4 @@ class TestChangetPassword(BaseTestCase):
     def test_valid_json_request(self):
         """Test change password request is json format"""
         self.automate('/api/v1/change-password', data=self.passwords,
-                       jsons=False, method='put')
+                      jsons=False, method='put')
