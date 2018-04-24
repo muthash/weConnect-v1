@@ -29,15 +29,15 @@ class BaseTestCase(unittest.TestCase):
         self.get_login_token(self.reg_data)
         self.business_data = {'name': 'Andela', 'category': 'IT',
                               'location': 'Nairobi'}
-        self.biz_res = self.make_request('/api/v1/businesses', 'post', 
+        self.biz_res = self.make_request('/api/v1/businesses', 'post',
                                          data=self.business_data)
         self.password = {'password': 'Test1234'}
 
-        self.review_data={'review': 'Andela is the BEST. TIA'}
+        self.review_data = {'review': 'Andela is the BEST. TIA'}
         with self.app.app_context():
             self.expires = datetime.timedelta(minutes=2)
             self.token = create_access_token(identity='notuser@mail.com',
-                                         expires_delta=self.expires)
+                                             expires_delta=self.expires)
 
     def make_request(self, url, method, data):
         """Make a request to the given url with the given method"""

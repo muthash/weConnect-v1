@@ -96,7 +96,7 @@ class ResetPassword(BaseView):
 
         if self.validate_null(**user_data):
             return self.validate_null(**user_data)
-        
+
         email = self.normalize_email(email)
         for user in users:
             if user.email == email:

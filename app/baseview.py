@@ -99,7 +99,7 @@ class BaseView(MethodView):
     def check_password(password):
         if re.match(r"(?=\D*\d)(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])[A-Za-z0-9]{8,}$", password):
             return False
-        response = {'message': 'Password should contain at least eight characters' +
-                               ' with at least one digit, one uppercase letter' + 
-                               ' and one lowercase letter'}
+        response = {'message': 'Password should contain at least eight ' +
+                               'characters with at least one digit, one ' +
+                               'uppercase letter and one lowercase letter'}
         return jsonify(response), 400
