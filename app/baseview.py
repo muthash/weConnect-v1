@@ -11,14 +11,16 @@ from app import mail
 
 class BaseView(MethodView):
     """Base view method"""
-    def validate_json(self):
+    @staticmethod
+    def validate_json():
         """Returns false if request is json"""
         if request.get_json(silent=True) is None:
             response = {'message': 'The Request should be JSON format'}
             return jsonify(response), 400
         return False
 
-    def check_email(self, email):
+    @staticmethod
+    def check_email(email):
         try:
             validator_response = validate_email(email,
                                                 check_deliverability=False)
@@ -28,7 +30,8 @@ class BaseView(MethodView):
             response = {'message': str(error)}
             return jsonify(response), 400
 
-    def validate_null(self, **kwargs):
+    @staticmethod
+    def validate_null(**kwargs):
         """Returns a list with null fields"""
         messages = []
         for key in kwargs:
@@ -46,7 +49,8 @@ class BaseView(MethodView):
             return jsonify(response), 400
         return False
 
-    def generate_token(self, user, username,
+    @staticmethod
+    def generate_token(user, username,
                        expires=datetime.timedelta(hours=1)):
         """Return access token and response to user"""
         response = {
@@ -56,13 +60,15 @@ class BaseView(MethodView):
         }
         return jsonify(response), 200
 
-    def random_string(self, string_length=8):
+    @staticmethod
+    def random_string(string_length=8):
         """Return a random string of length string_length"""
         random = str(uuid.uuid4())
         random = random.replace("-", "")
         return random[:string_length]
 
-    def remove_extra_spaces(self, **kwargs):
+    @staticmethod
+    def remove_extra_spaces(**kwargs):
         """Maximum number of spaces between words should be one"""
         norm = {}
         for key in kwargs:
@@ -71,7 +77,8 @@ class BaseView(MethodView):
             norm[key] = norm_string
         return norm
 
-    def send_reset_password(self, email, password):
+    @staticmethod
+    def send_reset_password(email, password):
         """Returns a random string of length string_length"""
         message = Message(
             subject='Weconnect Account Password Reset',
@@ -80,14 +87,16 @@ class BaseView(MethodView):
         )
         mail.send(message)
 
-    def normalize_email(self, email):
+    @staticmethod
+    def normalize_email(email):
         """Lowercase the domain part of the email"""
         email_part = email.split('@')
         domain = email_part[1].lower()
         email = email_part[0]+'@'+domain
         return email
 
-    def check_password(self, password):
+    @staticmethod
+    def check_password(password):
         if re.match(r"(?=\D*\d)(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])[A-Za-z0-9]{8,}$", password):
             return False
         response = {'message': 'Password should contain at least eight characters' +
