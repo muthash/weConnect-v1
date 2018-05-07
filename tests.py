@@ -2,7 +2,6 @@ import os
 import unittest
 
 import coverage
-import click
 from app import create_app
 
 

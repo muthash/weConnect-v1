@@ -1,7 +1,7 @@
 [report]
+exclude_lines = def __repr__
 omit =
-    'app/tests/*',
-    'instance/*',
-    '**/__init__.py',
-    '**/__pycache__'
-    '/home/*'
+    app/tests/*
+    instance/*
+    app/__init__.py
+    /__pycache__/*

@@ -12,6 +12,13 @@ class Config(object):
     DEBUG = False
     CSRF_ENABLED = True
     SECRET_KEY = os.getenv('SECRET')
+    JWT_BLACKLIST_ENABLED = True
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
+    MAIL_USERNAME = os.environ.get('EMAIL')
+    MAIL_PASSWORD = os.environ.get('PASSWORD')
+    MAIL_DEFAULT_SENDER = os.environ.get('EMAIL')
 
 
 class DevelopmentConfig(Config):
